@@ -1,7 +1,7 @@
 
 /*
     A Lethal Company Mod
-    Copyright (C) 2024  TestAccount666 (Entity303 / TheBlackEntity)
+    Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
