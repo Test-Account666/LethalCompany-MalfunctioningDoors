@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -21,6 +20,7 @@
 using System.Collections;
 using BepInEx.Configuration;
 using GameNetcodeStuff;
+using MalfunctioningDoors.Functional;
 using MalfunctioningDoors.Patches;
 using UnityEngine;
 using Random = System.Random;
@@ -49,7 +49,16 @@ public class RandomOpenCloseMalfunction : MalfunctionalDoor {
         if (chance >= _malfunctionChance)
             return;
 
-        doorLock.OpenOrCloseDoor(StartOfRound.Instance.allPlayerScripts[0]);
+        var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
+
+        if (doorLocker is null) {
+            MalfunctioningDoors.Logger.LogFatal("No DoorLocker found?!");
+            return;
+        }
+
+        var open = !doorLock.isDoorOpened;
+
+        doorLocker.SetDoorOpenServerRpc(0, open);
     }
 
     public static int OverrideWeight(ConfigFile configFile) =>

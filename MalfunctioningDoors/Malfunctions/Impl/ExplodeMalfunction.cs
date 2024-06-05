@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -58,7 +57,14 @@ public class ExplodeMalfunction : MalfunctionalDoor {
         if (doorLock.isDoorOpened)
             return;
 
-        doorLock.OpenOrCloseDoor(playerControllerB);
+        var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
+
+        if (doorLocker is null) {
+            MalfunctioningDoors.Logger.LogFatal("No DoorLocker found?!");
+            return;
+        }
+
+        doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, true);
 
         PlayGhostHandSound();
 

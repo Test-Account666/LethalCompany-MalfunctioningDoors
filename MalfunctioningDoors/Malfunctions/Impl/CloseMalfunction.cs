@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -99,14 +98,23 @@ public class CloseMalfunction : MalfunctionalDoor {
     public override void UseInteract(PlayerControllerB playerControllerB) {
         var chance = _syncedRandom.Next(0, 100);
 
-        if (chance >= _openCloseAfterTwoSecondsChance)
-            doorLock.OpenOrCloseDoor(playerControllerB);
-        else
+        var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
+
+        if (doorLocker is null) {
+            MalfunctioningDoors.Logger.LogFatal("No DoorLocker found?!");
+            return;
+        }
+
+        var open = !doorLock.isDoorOpened;
+
+        if (chance >= _openCloseAfterTwoSecondsChance) {
+            doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, open);
+        } else
             StartCoroutine(DelayedTask(2, () => {
                 if (!doorLock.isDoorOpened)
                     return;
 
-                doorLock.OpenOrCloseDoor(playerControllerB);
+                doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, open);
             }));
     }
 

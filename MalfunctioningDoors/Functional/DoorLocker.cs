@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -34,8 +33,31 @@ public class DoorLocker : NetworkBehaviour {
         LockDoorClientRpc();
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    public void SetDoorOpenServerRpc(int playerWhoTriggered, bool open) {
+        SetDoorOpenClientRpc(playerWhoTriggered, open);
+    }
+
     [ClientRpc]
     private void LockDoorClientRpc() {
         _doorLock.LockDoor();
+    }
+
+    [ClientRpc]
+    private void SetDoorOpenClientRpc(int playerWhoTriggered, bool open) {
+        if (_doorLock.isDoorOpened == open)
+            return;
+
+        var allPlayerScripts = StartOfRound.Instance.allPlayerScripts;
+
+        if (playerWhoTriggered <= allPlayerScripts.Length)
+            return;
+
+        if (playerWhoTriggered >= allPlayerScripts.Length)
+            return;
+
+        var player = allPlayerScripts[playerWhoTriggered];
+
+        _doorLock.OpenOrCloseDoor(player);
     }
 }
