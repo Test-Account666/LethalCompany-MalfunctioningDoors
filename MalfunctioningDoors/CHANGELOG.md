@@ -3,10 +3,11 @@
 ## 1.3.0<br>
 
 \+ Added more networking, hopefully all desyncs are now fixed<br>
+\+ Added support for LobbyCompatibility<br>
 
 ## 1.2.1<br>
 
-\+ Add github link<br>
+\+ Added github link<br>
 
 ## 1.2.0<br>
 
