@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -27,6 +26,7 @@ using System.Threading;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using MalfunctioningDoors.Dependencies;
 using MalfunctioningDoors.Malfunctions;
 using MalfunctioningDoors.Patches;
 using UnityEngine;
@@ -36,6 +36,7 @@ using Object = UnityEngine.Object;
 
 namespace MalfunctioningDoors;
 
+[BepInDependency("BMX.LobbyCompatibility", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class MalfunctioningDoors : BaseUnityPlugin {
     private const int GHOST_HAND_SOUNDS_SIZE = 3;
@@ -49,6 +50,11 @@ public class MalfunctioningDoors : BaseUnityPlugin {
     private void Awake() {
         Logger = base.Logger;
         Instance = this;
+
+        if (DependencyChecker.IsLobbyCompatibilityInstalled()) {
+            Logger.LogInfo("Found LobbyCompatibility Mod, initializing support :)");
+            LobbyCompatibilitySupport.Initialize();
+        }
 
         var modDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
