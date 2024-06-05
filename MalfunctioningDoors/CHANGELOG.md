@@ -1,5 +1,9 @@
 # Malfunctioning Doors Mod
 
+## 1.3.0<br>
+
+\+ Added more networking, hopefully all desyncs are now fixed<br>
+
 ## 1.2.1<br>
 
 \+ Add github link<br>
