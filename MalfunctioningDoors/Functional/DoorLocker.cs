@@ -45,19 +45,21 @@ public class DoorLocker : NetworkBehaviour {
 
     [ClientRpc]
     private void SetDoorOpenClientRpc(int playerWhoTriggered, bool open) {
-        if (_doorLock.isDoorOpened == open)
+        if (_doorLock.isDoorOpened == open) {
+            MalfunctioningDoors.Logger.LogFatal($"Door state already matching state {open}!");
             return;
+        }
 
         var allPlayerScripts = StartOfRound.Instance.allPlayerScripts;
 
-        if (playerWhoTriggered <= allPlayerScripts.Length)
-            return;
+        if (playerWhoTriggered < 0) return;
 
-        if (playerWhoTriggered >= allPlayerScripts.Length)
-            return;
+        if (playerWhoTriggered >= allPlayerScripts.Length) return;
 
         var player = allPlayerScripts[playerWhoTriggered];
 
         _doorLock.OpenOrCloseDoor(player);
+
+        MalfunctioningDoors.Logger.LogFatal("Toggle!");
     }
 }
