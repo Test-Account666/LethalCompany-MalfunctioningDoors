@@ -1,5 +1,12 @@
 # Malfunctioning Doors Mod
 
+## 1.4.0<br>
+
+\+ Added dormant malfunction<br>
+\* Fixed doors not opening/closing<br>
+\# All doors are now always malfunctional. The chance of them not being malfunctional now just decided if they start as
+dormant or not.<br>
+
 ## 1.3.0<br>
 
 \+ Added more networking, hopefully all desyncs are now fixed<br>
