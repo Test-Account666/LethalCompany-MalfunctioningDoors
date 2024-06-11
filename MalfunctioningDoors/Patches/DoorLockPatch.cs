@@ -22,6 +22,7 @@ using BepInEx.Configuration;
 using HarmonyLib;
 using MalfunctioningDoors.Functional;
 using MalfunctioningDoors.Malfunctions;
+using MalfunctioningDoors.Malfunctions.Impl;
 using Random = System.Random;
 
 namespace MalfunctioningDoors.Patches;
@@ -39,12 +40,12 @@ public static class DoorLockPatch {
     [HarmonyPostfix]
     // ReSharper disable once InconsistentNaming
     public static void AfterAwake(DoorLock __instance) {
-        if (syncedRandom.Next(0, 100) >= _malfunctioningDoorChance)
-            return;
-
         __instance.gameObject.AddComponent<DoorLocker>();
 
-        var malfunctionalDoorType = MalfunctionGenerator.GenerateMalfunctionalDoor(syncedRandom);
+        var malfunctionalDoorType = typeof(DormantMalfunction);
+
+        if (syncedRandom.Next(0, 100) < _malfunctioningDoorChance)
+            malfunctionalDoorType = MalfunctionGenerator.GenerateMalfunctionalDoor(syncedRandom);
 
         AddMalfunction(__instance, malfunctionalDoorType);
     }
