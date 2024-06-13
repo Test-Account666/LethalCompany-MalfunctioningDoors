@@ -1,5 +1,9 @@
 # Malfunctioning Doors Mod
 
+## 1.4.1<br>
+
+\* Fix NullReferenceExceptions
+
 ## 1.4.0<br>
 
 \+ Added dormant malfunction<br>
