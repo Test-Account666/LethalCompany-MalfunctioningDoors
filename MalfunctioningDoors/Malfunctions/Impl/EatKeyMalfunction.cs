@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -60,6 +59,10 @@ public class EatKeyMalfunction : MalfunctionalDoor {
     private IEnumerator LockDoorRoutine() {
         yield return new WaitForEndOfFrame();
 
+        yield return new WaitUntil(() => doorLock is not null);
+
+        if (doorLock is null) yield break;
+
         doorLock.LockDoor();
 
         var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
@@ -73,5 +76,5 @@ public class EatKeyMalfunction : MalfunctionalDoor {
     }
 
     public override bool ShouldExecute() =>
-        _syncedRandom.Next(0, 100) < _malfunctionChance;
+        _syncedRandom.Next(0, 100) < _malfunctionChance && !IsDestroyed();
 }

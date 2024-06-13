@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -28,10 +27,17 @@ namespace MalfunctioningDoors.Malfunctions;
 
 public abstract class MalfunctionalDoor : MonoBehaviour {
     private static int _changeMalfunctionChance = 30;
-    protected DoorLock doorLock = null!;
+    protected DoorLock? doorLock;
+    private bool _destroy;
 
     private void Start() =>
         StartCoroutine(RollChangeMalfunctionChance());
+
+    private void OnDestroy() {
+        _destroy = true;
+    }
+
+    protected bool IsDestroyed() => _destroy;
 
     public abstract void TouchInteract(PlayerControllerB playerControllerB);
     public abstract void UseInteract(PlayerControllerB playerControllerB);
@@ -49,10 +55,13 @@ public abstract class MalfunctionalDoor : MonoBehaviour {
             yield return new WaitForSeconds(60);
             yield return new WaitForEndOfFrame();
 
+            if (_destroy) break;
+
+            if (doorLock is null) continue;
+
             var chance = DoorLockPatch.syncedRandom.Next(0, 100);
 
-            if (chance > _changeMalfunctionChance)
-                continue;
+            if (chance > _changeMalfunctionChance) continue;
 
             var malfunctionalDoor = MalfunctionGenerator.GenerateMalfunctionalDoor(DoorLockPatch.syncedRandom);
 

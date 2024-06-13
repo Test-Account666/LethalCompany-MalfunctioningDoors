@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -37,8 +36,7 @@ public static class MalfunctionGenerator {
         while (randomNumber > 0)
             foreach (var shuffledMalfunction in shuffledMalfunctions) {
                 randomNumber -= shuffledMalfunction.Value;
-                if (randomNumber > 0)
-                    continue;
+                if (randomNumber > 0) continue;
 
                 return shuffledMalfunction.Key;
             }

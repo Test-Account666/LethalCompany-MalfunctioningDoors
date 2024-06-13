@@ -54,6 +54,8 @@ public class ExplodeMalfunction : MalfunctionalDoor {
                                              "Defines the chance, if a malfunction is executed").Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
+        if (doorLock is null) return;
+
         if (doorLock.isDoorOpened)
             return;
 
@@ -98,8 +100,7 @@ public class ExplodeMalfunction : MalfunctionalDoor {
             }
         }
 
-        if (fetched)
-            return;
+        if (fetched) return;
 
         MalfunctioningDoors.Logger.LogFatal("Something went wrong trying to fetch spawnExplosion!");
     }
@@ -133,17 +134,17 @@ public class ExplodeMalfunction : MalfunctionalDoor {
     }
 
     public override bool ShouldExecute() =>
-        _syncedRandom.Next(0, 100) <= _malfunctionChance;
+        _syncedRandom.Next(0, 100) <= _malfunctionChance && !IsDestroyed();
 
     private bool FetchAndExecuteSpawnExplosion(IReadOnlyCollection<object> parameters) {
         // Get the method info
         _spawnExplosionMethod ??= typeof(Landmine).GetMethod("SpawnExplosion", BindingFlags.Public | BindingFlags.Static);
 
-        if (_spawnExplosionMethod is null)
-            return false; // Return false, as we failed to identify the method
+        // Return false, as we failed to identify the method
+        if (_spawnExplosionMethod is null) return false;
 
-        if (_spawnExplosionMethod.GetParameters().Length != parameters.Count)
-            return false; // Return false, as we failed to identify the method
+        // Return false, as we failed to identify the method
+        if (_spawnExplosionMethod.GetParameters().Length != parameters.Count) return false;
 
         // ReSharper disable once CoVariantArrayConversion
         var parameterExpressions = parameters.Select(o => o is null

@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -26,12 +25,10 @@ namespace MalfunctioningDoors.Functional;
 public class GhostHandRotator : MonoBehaviour {
     internal Transform? playerControllerTransform;
 
-    private void Start() =>
-        StartCoroutine(DestroyLater(3F));
+    private void Start() => StartCoroutine(DestroyLater(3F));
 
     private void Update() {
-        if (!playerControllerTransform)
-            return;
+        if (!playerControllerTransform) return;
 
         transform.LookAt(playerControllerTransform);
 

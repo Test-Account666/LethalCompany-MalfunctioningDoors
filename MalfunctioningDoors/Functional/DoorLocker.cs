@@ -24,9 +24,7 @@ namespace MalfunctioningDoors.Functional;
 public class DoorLocker : NetworkBehaviour {
     private DoorLock _doorLock = null!;
 
-    private void Awake() {
-        _doorLock = GetComponent<DoorLock>();
-    }
+    private void Awake() => _doorLock = GetComponent<DoorLock>();
 
     [ServerRpc(RequireOwnership = false)]
     public void LockDoorServerRpc() {

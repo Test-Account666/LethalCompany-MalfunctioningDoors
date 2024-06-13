@@ -62,16 +62,15 @@ public class CloseMalfunction : MalfunctionalDoor {
     }
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
-        if (!doorLock.isDoorOpened)
-            return;
+        if (doorLock is null) return;
 
-        if (doorLock.GetComponent<WaitingForDoorToBeClosed>() is not null)
-            return;
+        if (!doorLock.isDoorOpened) return;
+
+        if (doorLock.GetComponent<WaitingForDoorToBeClosed>() is not null) return;
 
         var chance = _syncedRandom.Next(0, 100);
 
-        if (chance >= _lockChance)
-            return;
+        if (chance >= _lockChance) return;
 
         var chance1 = _syncedRandom.Next(0, 100);
 
@@ -96,6 +95,8 @@ public class CloseMalfunction : MalfunctionalDoor {
     }
 
     public override void UseInteract(PlayerControllerB playerControllerB) {
+        if (doorLock is null) return;
+
         var chance = _syncedRandom.Next(0, 100);
 
         var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
@@ -109,20 +110,22 @@ public class CloseMalfunction : MalfunctionalDoor {
 
         if (chance >= _openCloseAfterTwoSecondsChance) {
             doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, open);
-        } else
-            StartCoroutine(DelayedTask(2, () => {
-                if (!doorLock.isDoorOpened)
-                    return;
+            return;
+        }
 
-                doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, open);
-            }));
+        StartCoroutine(DelayedTask(2, () => {
+            if (!doorLock.isDoorOpened)
+                return;
+
+            doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, open);
+        }));
     }
 
     public override void UseKey() {
     }
 
     public override bool ShouldExecute() =>
-        _syncedRandom.Next(0, 100) < _malfunctionChance;
+        _syncedRandom.Next(0, 100) < _malfunctionChance && !IsDestroyed();
 
     private static IEnumerator DelayedTask(float delay, Action action) {
         yield return new WaitForSeconds(delay);

@@ -56,27 +56,25 @@ public static class DoorLockPatch {
     public static void AfterUnlockDoorSyncWithServer(DoorLock __instance) {
         var malfunctionalDoor = __instance.gameObject.GetComponent<MalfunctionalDoor>();
 
-        if (malfunctionalDoor is null)
-            return;
+        if (malfunctionalDoor is null) return;
 
-        if (!malfunctionalDoor.ShouldExecute())
-            return;
+        if (!malfunctionalDoor.ShouldExecute()) return;
 
         malfunctionalDoor.UseKey();
     }
 
-    internal static void AddMalfunction(DoorLock doorLock, Type malfunctionalDoorType) {
+    internal static void AddMalfunction(DoorLock? doorLock, Type malfunctionalDoorType) {
+        if (doorLock is null) return;
+
         if (!malfunctionalDoorType.IsSubclassOf(typeof(MalfunctionalDoor)))
             throw new ArgumentException($"Type '{malfunctionalDoorType.FullName}'");
 
         var malfunctionalDoor = (MalfunctionalDoor) doorLock.gameObject.AddComponent(malfunctionalDoorType);
 
         doorLock.doorTrigger.onInteract.AddListener(playerControllerB => {
-            if (playerControllerB == null)
-                return;
+            if (playerControllerB is null) return;
 
-            if (!malfunctionalDoor.ShouldExecute())
-                return;
+            if (!malfunctionalDoor.ShouldExecute()) return;
 
             malfunctionalDoor.UseInteract(playerControllerB);
         });
@@ -89,11 +87,9 @@ public static class DoorLockPatch {
 
         interactTrigger.onInteract = new();
         interactTrigger.onInteract.AddListener(playerControllerB => {
-            if (playerControllerB == null)
-                return;
+            if (playerControllerB is null) return;
 
-            if (!malfunctionalDoor.ShouldExecute())
-                return;
+            if (!malfunctionalDoor.ShouldExecute()) return;
 
             malfunctionalDoor.TouchInteract(playerControllerB);
         });

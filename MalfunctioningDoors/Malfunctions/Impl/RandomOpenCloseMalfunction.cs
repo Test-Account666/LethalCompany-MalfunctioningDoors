@@ -39,15 +39,15 @@ public class RandomOpenCloseMalfunction : MalfunctionalDoor {
     }
 
     private void Update() {
-        if (_waiting)
-            return;
+        if (_waiting) return;
 
         StartCoroutine(StartWaiting());
 
+        if (doorLock is null) return;
+
         var chance = _syncedRandom.Next(0, 100);
 
-        if (chance >= _malfunctionChance)
-            return;
+        if (chance >= _malfunctionChance) return;
 
         var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
 
