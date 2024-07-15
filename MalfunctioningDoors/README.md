@@ -18,4 +18,8 @@ These are all Malfunctions this mod currently adds:
   through, but be careful when they are closed!)
 - Random Open / Close Malfunction (Doors will just open and close randomly)
 
+This mod also adds its own version of door breach :)
+
 Shoutout to [**s1ckboy**](https://thunderstore.io/c/lethal-company/p/s1ckboy/) who made the ghost hand model and sfx!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P6ZWLCY)
