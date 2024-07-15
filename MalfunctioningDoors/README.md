@@ -17,6 +17,7 @@ These are all Malfunctions this mod currently adds:
 - Ghost Hand Malfunction (A ghost hand might push you away and deal damage by doing so. You can just open them and walk
   through, but be careful when they are closed!)
 - Random Open / Close Malfunction (Doors will just open and close randomly)
+- No You (Door will open *you*)
 
 This mod also adds its own version of door breach :)
 
