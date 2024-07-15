@@ -33,7 +33,7 @@ using Random = System.Random;
 namespace MalfunctioningDoors.Malfunctions.Impl;
 
 [Malfunction(55)]
-public class ExplodeMalfunction : MalfunctionalDoor {
+public class GhostHandMalfunction : MalfunctionalDoor {
     private static int _malfunctionChance = 35;
     private static Vector3 _position;
     private Action? _spawnExplosionExpression;
@@ -46,11 +46,11 @@ public class ExplodeMalfunction : MalfunctionalDoor {
     }
 
     public static int OverrideWeight(ConfigFile configFile) =>
-        configFile.Bind("4. Explode Malfunction", "1. Malfunction Weight", 55,
+        configFile.Bind("4. Ghost Hand Malfunction", "1. Malfunction Weight", 55,
                         "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
 
     public new static void InitializeConfig(ConfigFile configFile) =>
-        _malfunctionChance = configFile.Bind("4. Explode Malfunction", "2. Malfunction Chance", 35,
+        _malfunctionChance = configFile.Bind("4. Ghost Hand Malfunction", "2. Malfunction Chance", 35,
                                              "Defines the chance, if a malfunction is executed").Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
@@ -149,7 +149,8 @@ public class ExplodeMalfunction : MalfunctionalDoor {
         // ReSharper disable once CoVariantArrayConversion
         var parameterExpressions = parameters.Select(o => o is null
                                                          ? (Expression) Expression.Call(
-                                                             AccessTools.Method(typeof(ExplodeMalfunction), nameof(CreateExplosionObject)))
+                                                             AccessTools.Method(typeof(GhostHandMalfunction),
+                                                                                nameof(CreateExplosionObject)))
                                                          : Expression.Constant(o)).ToArray();
 
         var callExpression = Expression.Call(_spawnExplosionMethod, parameterExpressions);
