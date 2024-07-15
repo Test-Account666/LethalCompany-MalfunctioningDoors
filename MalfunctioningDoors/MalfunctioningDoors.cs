@@ -42,6 +42,9 @@ public class MalfunctioningDoors : BaseUnityPlugin {
     private const int GHOST_HAND_SOUNDS_SIZE = 3;
     internal static Object ghostHandPrefab = null!;
 
+    internal static AudioClip? doorHitSfx;
+    internal static AudioClip? doorBreakSfx;
+
     internal static readonly AudioClip[] GhostHandSfxList = new AudioClip[GHOST_HAND_SOUNDS_SIZE];
     public static MalfunctioningDoors Instance { get; private set; } = null!;
     internal new static ManualLogSource Logger { get; private set; } = null!;
@@ -141,16 +144,26 @@ public class MalfunctioningDoors : BaseUnityPlugin {
     private static IEnumerator LoadAudioClips() {
         var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-        Logger.LogInfo("Loading Ghost Hand Sounds...");
+        Logger.LogInfo("Loading Sounds...");
 
         Debug.Assert(assemblyDirectory != null, nameof(assemblyDirectory) + " != null");
         var audioPath = Path.Combine(assemblyDirectory, "sounds");
 
         audioPath = Directory.Exists(audioPath)? audioPath : Path.Combine(assemblyDirectory);
 
+        LoadGhostHandAudioClips(audioPath);
+
+        LoadDoorAudioClips(audioPath);
+
+        yield break;
+    }
+
+    private static void LoadGhostHandAudioClips(string audioPath) {
+        Logger.LogInfo("Loading Ghost Hand Sounds...");
+
         var ghostHandAudioPath = Path.Combine(audioPath, "GhostHandSounds");
 
-        ghostHandAudioPath = Directory.Exists(ghostHandAudioPath)? ghostHandAudioPath : Path.Combine(assemblyDirectory);
+        ghostHandAudioPath = Directory.Exists(ghostHandAudioPath)? ghostHandAudioPath : Path.Combine(audioPath);
 
         for (var index = 1; index <= GHOST_HAND_SOUNDS_SIZE; index++) {
             var sound = index - 1;
@@ -167,8 +180,22 @@ public class MalfunctioningDoors : BaseUnityPlugin {
 
             Logger.LogInfo($"Loaded clip '{ghostHandAudioClip.name}'!");
         }
+    }
 
-        yield break;
+    private static void LoadDoorAudioClips(string audioPath) {
+        Logger.LogInfo("Loading Door Sounds...");
+
+        var doorAudioPath = Path.Combine(audioPath, "DoorSfx");
+
+        doorAudioPath = Directory.Exists(doorAudioPath)? doorAudioPath : Path.Combine(audioPath);
+
+        doorHitSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorHit.wav")), "DoorHit");
+
+        Logger.LogInfo(doorHitSfx is null? "Failed to load clip 'DoorHit'!" : $"Loaded clip '{doorHitSfx.name}'!");
+
+        doorBreakSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorBreak.wav")), "DoorBreak");
+
+        Logger.LogInfo(doorBreakSfx is null? "Failed to load clip 'DoorBreak'!" : $"Loaded clip '{doorBreakSfx.name}'!");
     }
 
     private static AudioClip? LoadAudioClipFromFile(Uri filePath, string name) {
