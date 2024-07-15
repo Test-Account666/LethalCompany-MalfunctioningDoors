@@ -57,7 +57,5 @@ public class DoorLocker : NetworkBehaviour {
         var player = allPlayerScripts[playerWhoTriggered];
 
         _doorLock.OpenOrCloseDoor(player);
-
-        MalfunctioningDoors.Logger.LogFatal("Toggle!");
     }
 }
