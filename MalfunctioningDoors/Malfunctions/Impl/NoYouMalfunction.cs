@@ -38,6 +38,8 @@ public class NoYouMalfunction : MalfunctionalDoor {
 
         StartCoroutine(StartRotation(playerControllerB, direction));
 
+        playerControllerB.JumpToFearLevel(1F);
+
         var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
 
         if (doorLocker is null) {
