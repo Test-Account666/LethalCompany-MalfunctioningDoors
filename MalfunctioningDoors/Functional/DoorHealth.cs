@@ -21,6 +21,7 @@ using System.Collections;
 using MalfunctioningDoors.Malfunctions;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace MalfunctioningDoors.Functional;
 
@@ -32,6 +33,14 @@ public class DoorHealth : NetworkBehaviour {
     private bool _hittable = true;
 
     private void Awake() => _health = Random.RandomRangeInt(8, 25);
+
+    private void Update() {
+        if (!_broken) return;
+
+        if (_doorLock.isDoorOpened) return;
+
+        _doorLocker.SetDoorOpenServerRpc(-1, true);
+    }
 
     public override void OnNetworkSpawn() {
         base.OnNetworkSpawn();
