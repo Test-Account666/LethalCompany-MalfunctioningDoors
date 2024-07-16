@@ -50,11 +50,9 @@ public class DoorLocker : NetworkBehaviour {
 
         var allPlayerScripts = StartOfRound.Instance.allPlayerScripts;
 
-        if (playerWhoTriggered < 0) return;
-
         if (playerWhoTriggered >= allPlayerScripts.Length) return;
 
-        var player = allPlayerScripts[playerWhoTriggered];
+        var player = allPlayerScripts[playerWhoTriggered < 0? 0 : playerWhoTriggered];
 
         _doorLock.OpenOrCloseDoor(player);
     }

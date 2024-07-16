@@ -56,8 +56,7 @@ public class GhostHandMalfunction : MalfunctionalDoor {
     public override void TouchInteract(PlayerControllerB playerControllerB) {
         if (doorLock is null) return;
 
-        if (doorLock.isDoorOpened)
-            return;
+        if (doorLock.isDoorOpened) return;
 
         var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
 
@@ -148,9 +147,8 @@ public class GhostHandMalfunction : MalfunctionalDoor {
 
         // ReSharper disable once CoVariantArrayConversion
         var parameterExpressions = parameters.Select(o => o is null
-                                                         ? (Expression) Expression.Call(
-                                                             AccessTools.Method(typeof(GhostHandMalfunction),
-                                                                                nameof(CreateExplosionObject)))
+                                                         ? (Expression) Expression.Call(AccessTools.Method(typeof(GhostHandMalfunction),
+                                                                                            nameof(CreateExplosionObject)))
                                                          : Expression.Constant(o)).ToArray();
 
         var callExpression = Expression.Call(_spawnExplosionMethod, parameterExpressions);
