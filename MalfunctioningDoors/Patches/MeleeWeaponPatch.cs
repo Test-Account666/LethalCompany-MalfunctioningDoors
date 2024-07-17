@@ -31,7 +31,11 @@ public static class MeleeWeaponPatch {
     private static void HitDoor(Shovel __instance, bool cancel) {
         if (cancel) return;
 
-        HitDoor(__instance, __instance.shovelHitForce, 1.5f, 0.8f, -0.35f);
+        var audioSource = __instance.shovelAudio;
+
+        audioSource.clip = MalfunctioningDoors.doorHitShovelSfx;
+
+        HitDoor(__instance, __instance.shovelHitForce, 1.5f, 0.8f, -0.35f, audioSource);
     }
 
     [HarmonyPatch(typeof(KnifeItem), nameof(KnifeItem.HitKnife))]
@@ -40,7 +44,11 @@ public static class MeleeWeaponPatch {
     private static void HitDoor(KnifeItem __instance, bool cancel) {
         if (cancel) return;
 
-        HitDoor(__instance, __instance.knifeHitForce, 0.75f, 0.3F, 0.1f, __instance.knifeAudio);
+        var audioSource = __instance.knifeAudio;
+
+        audioSource.clip = MalfunctioningDoors.doorHitKnifeSfx;
+
+        HitDoor(__instance, __instance.knifeHitForce, 0.75f, 0.3F, 0.1f, audioSource);
     }
 
     private static void HitDoor(GrabbableObject grabbableObject, int damage, float maxDistance, float radius, float rightMultiplier,
@@ -69,10 +77,11 @@ public static class MeleeWeaponPatch {
 
             if (!hasHealth) continue;
 
-            if (!playedSound && hitSoundSource is not null) {
-                playedSound = true;
-                hitSoundSource.clip = MalfunctioningDoors.doorHitSfx;
-                hitSoundSource.Play();
+            if (!doorHealth.IsBroken() && !doorHealth.IsDoorOpen()) {
+                if (!playedSound && hitSoundSource is not null) {
+                    playedSound = true;
+                    hitSoundSource.Play();
+                }
             }
 
             Debug.Assert(playerHeldBy != null, nameof(playerHeldBy) + " != null");

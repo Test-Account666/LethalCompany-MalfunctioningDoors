@@ -42,7 +42,8 @@ public class MalfunctioningDoors : BaseUnityPlugin {
     private const int GHOST_HAND_SOUNDS_SIZE = 3;
     internal static Object ghostHandPrefab = null!;
 
-    internal static AudioClip? doorHitSfx;
+    internal static AudioClip? doorHitKnifeSfx;
+    internal static AudioClip? doorHitShovelSfx;
     internal static AudioClip? doorBreakSfx;
 
     internal static readonly AudioClip[] GhostHandSfxList = new AudioClip[GHOST_HAND_SOUNDS_SIZE];
@@ -189,9 +190,15 @@ public class MalfunctioningDoors : BaseUnityPlugin {
 
         doorAudioPath = Directory.Exists(doorAudioPath)? doorAudioPath : Path.Combine(audioPath);
 
-        doorHitSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorHit.wav")), "DoorHit");
 
-        Logger.LogInfo(doorHitSfx is null? "Failed to load clip 'DoorHit'!" : $"Loaded clip '{doorHitSfx.name}'!");
+        doorHitKnifeSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorHitKnife.wav")), "DoorHitKnife");
+
+        Logger.LogInfo(doorHitKnifeSfx is null? "Failed to load clip 'DoorHitKnife'!" : $"Loaded clip '{doorHitKnifeSfx.name}'!");
+
+        doorHitShovelSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorHitShovel.wav")), "DoorHitShovel");
+
+        Logger.LogInfo(doorHitShovelSfx is null? "Failed to load clip 'DoorHitShovel'!" : $"Loaded clip '{doorHitShovelSfx.name}'!");
+
 
         doorBreakSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorBreak.wav")), "DoorBreak");
 

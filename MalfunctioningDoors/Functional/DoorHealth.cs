@@ -34,6 +34,9 @@ public class DoorHealth : NetworkBehaviour {
 
     private void Awake() => _health = Random.RandomRangeInt(8, 25);
 
+    public bool IsBroken() => _broken;
+    public bool IsDoorOpen() => _doorLock.isDoorOpened;
+
     private void Update() {
         if (!_broken) return;
 
