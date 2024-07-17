@@ -1,5 +1,10 @@
 # Malfunctioning Doors Mod
 
+## 1.6.0<br>
+
+\+ Added new door breach sound<br>
+\+ Added No You malfunction<br>
+
 ## 1.5.0<br>
 
 \+ Added my version of Door Breach<br>
