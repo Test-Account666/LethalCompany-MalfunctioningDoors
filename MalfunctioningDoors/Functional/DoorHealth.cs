@@ -19,6 +19,7 @@
 
 using System.Collections;
 using MalfunctioningDoors.Malfunctions;
+using Mono.Cecil.Cil;
 using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -27,12 +28,17 @@ namespace MalfunctioningDoors.Functional;
 
 public class DoorHealth : NetworkBehaviour {
     private bool _broken;
+    private bool _hittable = true;
     private DoorLock _doorLock = null!;
     private DoorLocker _doorLocker = null!;
-    private int _health = 20;
-    private bool _hittable = true;
+    private int _health = 8;
 
-    private void Awake() => _health = Random.RandomRangeInt(8, 25);
+    private void Awake() {
+        var minimumHealth = DoorBreachConfig.minimumDoorHealth;
+        var maximumHealth = minimumHealth + DoorBreachConfig.possibleAdditionalHealth;
+
+        _health = Random.RandomRangeInt(minimumHealth, maximumHealth + 1);
+    }
 
     public bool IsBroken() => _broken;
     public bool IsDoorOpen() => _doorLock.isDoorOpened;
@@ -42,7 +48,7 @@ public class DoorHealth : NetworkBehaviour {
 
         if (_doorLock.isDoorOpened) return;
 
-        _doorLocker.SetDoorOpenServerRpc(-1, true);
+        _doorLocker.SetDoorOpenServerRpc(ActionSource.Source.UNKNOWN.ToInt(), true);
     }
 
     public override void OnNetworkSpawn() {
@@ -62,6 +68,14 @@ public class DoorHealth : NetworkBehaviour {
 
     [ServerRpc(RequireOwnership = false)]
     public void HitDoorServerRpc(int playerWhoHit, int damage) {
+        if (damage == 0) return;
+
+        var actionSource = playerWhoHit.FromInt();
+
+        if (actionSource is null) return;
+
+        if (!DoorBreachConfig.AllowedDoorBreachSources.Contains(actionSource.Value)) return;
+
         if (!_hittable) return;
 
         _hittable = false;
@@ -73,22 +87,9 @@ public class DoorHealth : NetworkBehaviour {
         MalfunctioningDoors.Logger.LogDebug("Current health: " + _health);
         MalfunctioningDoors.Logger.LogDebug("Damage dealt: " + damage);
 
+        MalfunctioningDoors.Logger.LogDebug("Source: " + actionSource.Value);
+
         if (_broken) return;
-
-        var allPlayers = StartOfRound.Instance.allPlayerScripts;
-
-        allPlayers ??= [
-        ];
-
-        if (playerWhoHit >= allPlayers.Length) return;
-
-        if (playerWhoHit < 0) return;
-
-        var player = allPlayers[playerWhoHit];
-
-        var heldItem = player?.currentlyHeldObjectServer;
-
-        if (heldItem is null) return;
 
         SetHealthClientRpc(_health - damage);
 
@@ -98,7 +99,7 @@ public class DoorHealth : NetworkBehaviour {
     }
 
     private IEnumerator ResetHittable() {
-        yield return new WaitForSeconds(.1F);
+        yield return new WaitForSeconds(.05F);
         _hittable = true;
     }
 
@@ -120,6 +121,15 @@ public class DoorHealth : NetworkBehaviour {
             Destroy(malfunctionalDoor);
         }
 
+        _broken = true;
+
+        if (DoorBreachConfig.doorBreachMode == DoorBreachConfig.DoorBreachMode.DESTROY) {
+            var doorLockTransform = _doorLock.transform;
+            Landmine.SpawnExplosion(doorLockTransform.position, true);
+            Destroy(doorLockTransform.parent.gameObject);
+            return;
+        }
+
         _doorLocker.SetDoorOpenServerRpc(playerWhoTriggered, true);
 
         _doorLock.doorTrigger.interactable = false;
@@ -130,8 +140,6 @@ public class DoorHealth : NetworkBehaviour {
 
         _doorLock.doorTrigger.hoverIcon = null;
         _doorLock.doorTrigger.disabledHoverIcon = null;
-
-        _broken = true;
     }
 
     public int GetHealth() => _health;

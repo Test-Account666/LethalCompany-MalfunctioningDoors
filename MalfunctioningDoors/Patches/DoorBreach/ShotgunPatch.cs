@@ -22,7 +22,7 @@ using MalfunctioningDoors.Functional;
 using UnityEngine;
 using Random = System.Random;
 
-namespace MalfunctioningDoors.Patches;
+namespace MalfunctioningDoors.Patches.DoorBreach;
 
 [HarmonyPatch(typeof(ShotgunItem))]
 public static class ShotgunPatch {
@@ -32,9 +32,11 @@ public static class ShotgunPatch {
     [HarmonyPostfix]
     // ReSharper disable once InconsistentNaming
     private static void ShootDoor(ShotgunItem __instance, Vector3 shotgunPosition, Vector3 shotgunForward) {
-        var playerWhoShot = 0;
+        var playerWhoShot = ActionSource.Source.SHOTGUN_ACCIDENT.ToInt();
 
         if (__instance.isHeld) playerWhoShot = (int) __instance.playerHeldBy.playerClientId;
+
+        if (__instance.isHeldByEnemy) playerWhoShot = ActionSource.Source.SHOTGUN_ENEMY.ToInt();
 
         var ray = new Ray(shotgunPosition, shotgunForward);
 

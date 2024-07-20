@@ -21,7 +21,7 @@ using MalfunctioningDoors.Functional;
 using UnityEngine;
 using Debug = System.Diagnostics.Debug;
 
-namespace MalfunctioningDoors.Patches;
+namespace MalfunctioningDoors.Patches.DoorBreach;
 
 [HarmonyPatch]
 public static class MeleeWeaponPatch {

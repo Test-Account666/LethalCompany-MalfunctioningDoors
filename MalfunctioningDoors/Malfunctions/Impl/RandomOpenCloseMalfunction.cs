@@ -58,7 +58,7 @@ public class RandomOpenCloseMalfunction : MalfunctionalDoor {
 
         var open = !doorLock.isDoorOpened;
 
-        doorLocker.SetDoorOpenServerRpc(-2, open);
+        doorLocker.SetDoorOpenServerRpc(ActionSource.Source.MALFUNCTION.ToInt(), open);
     }
 
     public static int OverrideWeight(ConfigFile configFile) =>

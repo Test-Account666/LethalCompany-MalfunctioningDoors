@@ -71,6 +71,7 @@ public class MalfunctioningDoors : BaseUnityPlugin {
 
         DoorLockPatch.InitializeConfig(Config);
         MalfunctionalDoor.InitializeConfig(Config);
+        DoorBreachConfig.InitializeConfig(Config);
 
         FetchMalfunctions();
 

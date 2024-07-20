@@ -31,14 +31,10 @@ namespace MalfunctioningDoors.Patches;
 public static class DoorLockPatch {
     public static Random syncedRandom = new();
     private static int _malfunctioningDoorChance = 30;
-    private static bool _enableDoorBreach;
 
     public static void InitializeConfig(ConfigFile configFile) {
         _malfunctioningDoorChance = configFile.Bind("1. General", "1. Malfunctional Door Chance", 30,
                                                     "Defines the chance that a door can be malfunctional").Value;
-
-        _enableDoorBreach = configFile.Bind("1. General", "3. Enable DoorBreach", true,
-                                            "If true, enables this mod's version of door breach.").Value;
     }
 
     [HarmonyPatch(nameof(DoorLock.Awake))]
@@ -48,7 +44,7 @@ public static class DoorLockPatch {
         var gameObject = __instance.gameObject;
         var doorLocker = gameObject.AddComponent<DoorLocker>();
 
-        if (_enableDoorBreach) {
+        if (DoorBreachConfig.doorBreachEnabled) {
             var doorHealth = gameObject.AddComponent<DoorHealth>();
 
             doorHealth.SetDoorLock(__instance);
