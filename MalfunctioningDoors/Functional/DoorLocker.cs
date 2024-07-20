@@ -43,17 +43,14 @@ public class DoorLocker : NetworkBehaviour {
 
     [ClientRpc]
     private void SetDoorOpenClientRpc(int playerWhoTriggered, bool open) {
-        if (_doorLock.isDoorOpened == open) {
-            MalfunctioningDoors.Logger.LogFatal($"Door state already matching state {open}!");
-            return;
-        }
+        var component = _doorLock.gameObject.GetComponent<AnimatedObjectTrigger>();
 
-        var allPlayerScripts = StartOfRound.Instance.allPlayerScripts;
+        component.boolValue = open;
 
-        if (playerWhoTriggered >= allPlayerScripts.Length) return;
+        component.triggerAnimator.SetBool(component.animationString, component.boolValue);
+        component.onTriggerBool.Invoke(component.boolValue);
 
-        var player = allPlayerScripts[playerWhoTriggered < 0? 0 : playerWhoTriggered];
-
-        _doorLock.OpenOrCloseDoor(player);
+        _doorLock.isDoorOpened = component.boolValue;
+        _doorLock.navMeshObstacle.enabled = !component.boolValue;
     }
 }
