@@ -1,5 +1,11 @@
 # Malfunctioning Doors Mod
 
+## 1.7.0<br>
+
+\+ Added landmines and turrets as possible door breach methods<br>
+\* Fixed rapid opening/closing of doors<br>
+\# Door Breach is now very configurable<br>
+
 ## 1.6.0<br>
 
 \+ Added new door breach sound<br>
