@@ -31,6 +31,7 @@ using MalfunctioningDoors.Malfunctions;
 using MalfunctioningDoors.Patches;
 using MalfunctioningDoors.Patches.DoorBreach;
 using MalfunctioningDoors.Patches.DoorBreach.Mods.Piggy;
+using MalfunctioningDoors.Patches.DoorBreach.Mods.ToilHead;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = System.Diagnostics.Debug;
@@ -38,6 +39,7 @@ using Object = UnityEngine.Object;
 
 namespace MalfunctioningDoors;
 
+[BepInDependency("com.github.zehsteam.ToilHead", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("Piggy.PiggyVarietyMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("BMX.LobbyCompatibility", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
@@ -114,6 +116,8 @@ public class MalfunctioningDoors : BaseUnityPlugin {
             Harmony.PatchAll(typeof(RiflePatch));
             Harmony.PatchAll(typeof(RevolverPatch));
         }
+
+        if (DependencyChecker.IsToilHeadInstalled()) Harmony.PatchAll(typeof(ToilHeadTurretPatch));
 
         #endregion DoorBreach Patches
 

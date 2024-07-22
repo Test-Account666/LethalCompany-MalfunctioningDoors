@@ -9,4 +9,7 @@ internal static class DependencyChecker {
 
     internal static bool IsPiggyInstalled() =>
         Chainloader.PluginInfos.Values.Any(metadata => metadata.Metadata.GUID.Contains("Piggy.PiggyVarietyMod"));
+    
+    internal static bool IsToilHeadInstalled() =>
+        Chainloader.PluginInfos.Values.Any(metadata => metadata.Metadata.GUID.Contains("com.github.zehsteam.ToilHead"));
 }
