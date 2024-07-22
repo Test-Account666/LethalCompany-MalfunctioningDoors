@@ -20,6 +20,7 @@ These are all Malfunctions this mod currently adds:
 - No You (Door will open *you*)
 
 This mod also adds its own version of door breach :)
+(Supports [Piggys Variety Mod](https://thunderstore.io/c/lethal-company/p/Piggy/Piggys_Variety_Mod/))
 
 Shoutout to [**s1ckboy**](https://thunderstore.io/c/lethal-company/p/s1ckboy/) who made the ghost hand model and sfx!
 
