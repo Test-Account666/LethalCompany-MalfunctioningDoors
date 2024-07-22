@@ -65,4 +65,9 @@
     <ItemGroup>
         <NetcodePatch Include="$(TargetPath)"/>
     </ItemGroup>
+    <ItemGroup>
+      <Reference Include="PiggyVarietyMod">
+        <HintPath>..\include\PiggyVarietyMod.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 </Project>

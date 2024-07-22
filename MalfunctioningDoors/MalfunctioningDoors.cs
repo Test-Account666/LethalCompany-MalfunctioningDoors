@@ -29,6 +29,8 @@ using HarmonyLib;
 using MalfunctioningDoors.Dependencies;
 using MalfunctioningDoors.Malfunctions;
 using MalfunctioningDoors.Patches;
+using MalfunctioningDoors.Patches.DoorBreach;
+using MalfunctioningDoors.Patches.DoorBreach.Mods.Piggy;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = System.Diagnostics.Debug;
@@ -36,6 +38,7 @@ using Object = UnityEngine.Object;
 
 namespace MalfunctioningDoors;
 
+[BepInDependency("Piggy.PiggyVarietyMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("BMX.LobbyCompatibility", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class MalfunctioningDoors : BaseUnityPlugin {
@@ -78,13 +81,15 @@ public class MalfunctioningDoors : BaseUnityPlugin {
         //Make RCP methods work
         var types = Assembly.GetExecutingAssembly().GetTypes();
         foreach (var type in types) {
-            var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (var method in methods) {
-                var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                if (attributes.Length <= 0)
-                    continue;
+            try {
+                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                foreach (var method in methods) {
+                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                    if (attributes.Length <= 0) continue;
 
-                method.Invoke(null, null);
+                    method.Invoke(null, null);
+                }
+            } catch (FileNotFoundException) {
             }
         }
 
@@ -98,7 +103,23 @@ public class MalfunctioningDoors : BaseUnityPlugin {
 
         Logger.LogDebug("Patching...");
 
-        Harmony.PatchAll();
+        #region DoorBreach Patches
+
+        Harmony.PatchAll(typeof(LandminePatch));
+        Harmony.PatchAll(typeof(MeleeWeaponPatch));
+        Harmony.PatchAll(typeof(ShotgunPatch));
+        Harmony.PatchAll(typeof(TurretPatch));
+
+        if (DependencyChecker.IsPiggyInstalled()) {
+            Harmony.PatchAll(typeof(RiflePatch));
+            Harmony.PatchAll(typeof(RevolverPatch));
+        }
+
+        #endregion DoorBreach Patches
+
+        Harmony.PatchAll(typeof(DoorLockPatch));
+        Harmony.PatchAll(typeof(RoundManagerPatch));
+
 
         Logger.LogDebug("Finished patching!");
     }
