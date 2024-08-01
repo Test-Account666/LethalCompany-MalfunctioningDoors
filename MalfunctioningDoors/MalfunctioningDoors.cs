@@ -37,7 +37,7 @@ using Object = UnityEngine.Object;
 namespace MalfunctioningDoors;
 
 [BepInDependency("BMX.LobbyCompatibility", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("TestAccount666.DoorBreach", "1.0.0")]
+[BepInDependency("TestAccount666.DoorBreach", "1.1.0")]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class MalfunctioningDoors : BaseUnityPlugin {
     private const int GHOST_HAND_SOUNDS_SIZE = 3;

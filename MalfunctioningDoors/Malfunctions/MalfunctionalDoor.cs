@@ -19,6 +19,7 @@
 
 using System.Collections;
 using BepInEx.Configuration;
+using DoorBreach;
 using GameNetcodeStuff;
 using MalfunctioningDoors.Patches;
 using UnityEngine;
@@ -35,6 +36,8 @@ public abstract class MalfunctionalDoor : MonoBehaviour {
 
     private void DestroyMalfunctions(EventHandler.DoorBreachEventArguments doorBreachEventArguments) {
         EventHandler.doorBreach -= DestroyMalfunctions;
+
+        if (doorBreachEventArguments.doorBreachMode == DoorBreachConfig.DoorBreachMode.DESTROY) return;
 
         var malfunctions = doorLock?.GetComponents<MalfunctionalDoor>();
 

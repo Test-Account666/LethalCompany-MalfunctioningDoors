@@ -1,5 +1,9 @@
 # Malfunctioning Doors Mod
 
+## 1.11.0<br>
+
+\* Fixed issue with DoorBreach<br>
+
 ## 1.10.0<br>
 
 \# Malfunctioning Doors and Door Breach are now separate mods<br>
