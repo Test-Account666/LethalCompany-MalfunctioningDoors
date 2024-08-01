@@ -29,9 +29,6 @@ using HarmonyLib;
 using MalfunctioningDoors.Dependencies;
 using MalfunctioningDoors.Malfunctions;
 using MalfunctioningDoors.Patches;
-using MalfunctioningDoors.Patches.DoorBreach;
-using MalfunctioningDoors.Patches.DoorBreach.Mods.Piggy;
-using MalfunctioningDoors.Patches.DoorBreach.Mods.ToilHead;
 using UnityEngine;
 using UnityEngine.Networking;
 using Debug = System.Diagnostics.Debug;
@@ -39,9 +36,8 @@ using Object = UnityEngine.Object;
 
 namespace MalfunctioningDoors;
 
-[BepInDependency("com.github.zehsteam.ToilHead", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInDependency("Piggy.PiggyVarietyMod", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("BMX.LobbyCompatibility", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("TestAccount666.DoorBreach", "1.0.0")]
 [BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
 public class MalfunctioningDoors : BaseUnityPlugin {
     private const int GHOST_HAND_SOUNDS_SIZE = 3;
@@ -76,7 +72,6 @@ public class MalfunctioningDoors : BaseUnityPlugin {
 
         DoorLockPatch.InitializeConfig(Config);
         MalfunctionalDoor.InitializeConfig(Config);
-        DoorBreachConfig.InitializeConfig(Config);
 
         FetchMalfunctions();
 
@@ -104,22 +99,6 @@ public class MalfunctioningDoors : BaseUnityPlugin {
         Harmony ??= new(MyPluginInfo.PLUGIN_GUID);
 
         Logger.LogDebug("Patching...");
-
-        #region DoorBreach Patches
-
-        Harmony.PatchAll(typeof(LandminePatch));
-        Harmony.PatchAll(typeof(MeleeWeaponPatch));
-        Harmony.PatchAll(typeof(ShotgunPatch));
-        Harmony.PatchAll(typeof(TurretPatch));
-
-        if (DependencyChecker.IsPiggyInstalled()) {
-            Harmony.PatchAll(typeof(RiflePatch));
-            Harmony.PatchAll(typeof(RevolverPatch));
-        }
-
-        if (DependencyChecker.IsToilHeadInstalled()) Harmony.PatchAll(typeof(ToilHeadTurretPatch));
-
-        #endregion DoorBreach Patches
 
         Harmony.PatchAll(typeof(DoorLockPatch));
         Harmony.PatchAll(typeof(RoundManagerPatch));
@@ -165,8 +144,7 @@ public class MalfunctioningDoors : BaseUnityPlugin {
         }
     }
 
-    private static bool Predicate(ICustomAttributeProvider type) =>
-        type.GetCustomAttributes(typeof(MalfunctionAttribute), false).Length > 0;
+    private static bool Predicate(ICustomAttributeProvider type) => type.GetCustomAttributes(typeof(MalfunctionAttribute), false).Length > 0;
 
     private static IEnumerator LoadAudioClips() {
         var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

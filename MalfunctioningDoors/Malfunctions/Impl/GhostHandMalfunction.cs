@@ -25,6 +25,7 @@ using System.Reflection;
 using BepInEx.Configuration;
 using GameNetcodeStuff;
 using HarmonyLib;
+using DoorBreach.Functional;
 using MalfunctioningDoors.Functional;
 using MalfunctioningDoors.Patches;
 using UnityEngine;

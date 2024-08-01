@@ -66,11 +66,8 @@
         <NetcodePatch Include="$(TargetPath)"/>
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="com.github.zehsteam.ToilHead">
-        <HintPath>..\include\ToilHead.dll</HintPath>
-      </Reference>
-      <Reference Include="PiggyVarietyMod">
-        <HintPath>..\include\PiggyVarietyMod.dll</HintPath>
+      <Reference Include="TestAccount666.DoorBreach">
+        <HintPath>..\include\DoorBreach.dll</HintPath>
       </Reference>
     </ItemGroup>
 </Project>

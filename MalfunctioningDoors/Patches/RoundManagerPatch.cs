@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -26,6 +25,5 @@ namespace MalfunctioningDoors.Patches;
 public static class RoundManagerPatch {
     [HarmonyPatch("GenerateNewLevelClientRpc")]
     [HarmonyPrefix]
-    public static void BeforeGenerateNewLevelClientRpc(int randomSeed) =>
-        DoorLockPatch.syncedRandom = new(randomSeed);
+    public static void BeforeGenerateNewLevelClientRpc(int randomSeed) => DoorLockPatch.syncedRandom = new(randomSeed);
 }

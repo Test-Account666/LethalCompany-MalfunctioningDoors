@@ -19,8 +19,9 @@
 
 using System.Collections;
 using BepInEx.Configuration;
+using DoorBreach;
 using GameNetcodeStuff;
-using MalfunctioningDoors.Functional;
+using DoorBreach.Functional;
 using MalfunctioningDoors.Patches;
 using UnityEngine;
 using Random = System.Random;

@@ -22,6 +22,7 @@ using BepInEx.Configuration;
 using GameNetcodeStuff;
 using MalfunctioningDoors.Patches;
 using UnityEngine;
+using EventHandler = DoorBreach.EventHandler;
 
 namespace MalfunctioningDoors.Malfunctions;
 
@@ -30,12 +31,26 @@ public abstract class MalfunctionalDoor : MonoBehaviour {
     protected DoorLock? doorLock;
     private bool _destroy;
 
-    private void Start() =>
-        StartCoroutine(RollChangeMalfunctionChance());
+    private void Awake() => EventHandler.doorBreach += DestroyMalfunctions;
 
-    private void OnDestroy() {
-        _destroy = true;
+    private void DestroyMalfunctions(EventHandler.DoorBreachEventArguments doorBreachEventArguments) {
+        EventHandler.doorBreach -= DestroyMalfunctions;
+
+        var malfunctions = doorLock?.GetComponents<MalfunctionalDoor>();
+
+        malfunctions ??= [
+        ];
+
+        foreach (var malfunction in malfunctions) {
+            if (malfunction is null) continue;
+
+            Destroy(malfunction);
+        }
     }
+
+    private void Start() => StartCoroutine(RollChangeMalfunctionChance());
+
+    private void OnDestroy() => _destroy = true;
 
     protected bool IsDestroyed() => _destroy;
 

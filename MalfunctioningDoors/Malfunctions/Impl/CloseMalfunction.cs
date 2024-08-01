@@ -20,8 +20,8 @@
 using System;
 using System.Collections;
 using BepInEx.Configuration;
+using DoorBreach.Functional;
 using GameNetcodeStuff;
-using MalfunctioningDoors.Functional;
 using MalfunctioningDoors.Patches;
 using UnityEngine;
 using Random = System.Random;

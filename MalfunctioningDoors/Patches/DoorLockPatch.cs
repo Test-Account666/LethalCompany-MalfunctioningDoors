@@ -20,7 +20,6 @@
 using System;
 using BepInEx.Configuration;
 using HarmonyLib;
-using MalfunctioningDoors.Functional;
 using MalfunctioningDoors.Malfunctions;
 using MalfunctioningDoors.Malfunctions.Impl;
 using Random = System.Random;
@@ -32,25 +31,15 @@ public static class DoorLockPatch {
     public static Random syncedRandom = new();
     private static int _malfunctioningDoorChance = 30;
 
-    public static void InitializeConfig(ConfigFile configFile) {
+    public static void InitializeConfig(ConfigFile configFile) =>
         _malfunctioningDoorChance = configFile.Bind("1. General", "1. Malfunctional Door Chance", 30,
                                                     "Defines the chance that a door can be malfunctional").Value;
-    }
 
     [HarmonyPatch(nameof(DoorLock.Awake))]
     [HarmonyPostfix]
+    [HarmonyAfter("TestAccount666.DoorBreach")]
     // ReSharper disable once InconsistentNaming
     public static void AfterAwake(DoorLock __instance) {
-        var gameObject = __instance.gameObject;
-        var doorLocker = gameObject.AddComponent<DoorLocker>();
-
-        if (DoorBreachConfig.doorBreachEnabled) {
-            var doorHealth = gameObject.AddComponent<DoorHealth>();
-
-            doorHealth.SetDoorLock(__instance);
-            doorHealth.SetDoorLocker(doorLocker);
-        }
-
         var malfunctionalDoorType = typeof(DormantMalfunction);
 
         if (syncedRandom.Next(0, 100) < _malfunctioningDoorChance)
@@ -75,8 +64,7 @@ public static class DoorLockPatch {
     internal static void AddMalfunction(DoorLock? doorLock, Type malfunctionalDoorType) {
         if (doorLock is null) return;
 
-        if (!malfunctionalDoorType.IsSubclassOf(typeof(MalfunctionalDoor)))
-            throw new ArgumentException($"Type '{malfunctionalDoorType.FullName}'");
+        if (!malfunctionalDoorType.IsSubclassOf(typeof(MalfunctionalDoor))) throw new ArgumentException($"Type '{malfunctionalDoorType.FullName}'");
 
         var malfunctionalDoor = (MalfunctionalDoor) doorLock.gameObject.AddComponent(malfunctionalDoorType);
 

@@ -1,4 +1,3 @@
-
 /*
     A Lethal Company Mod
     Copyright (C) 2024  TestAccount666 (Entity303 / Test-Account666)
@@ -26,8 +25,7 @@ namespace MalfunctioningDoors.Malfunctions;
 public class MalfunctionDictionary : Dictionary<Type, int> {
     public new void Add(Type key, int value) {
         if (!key.IsSubclassOf(typeof(MalfunctionalDoor)))
-            throw new InvalidOperationException("MalfunctionDictionary can only contain sub-types of " +
-                                                typeof(MalfunctionalDoor).FullName + "!");
+            throw new InvalidOperationException("MalfunctionDictionary can only contain sub-types of " + typeof(MalfunctionalDoor).FullName + "!");
 
         base.Add(key, value);
     }
