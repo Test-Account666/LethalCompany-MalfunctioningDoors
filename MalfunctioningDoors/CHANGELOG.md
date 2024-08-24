@@ -1,5 +1,10 @@
 # Malfunctioning Doors Mod
 
+## 1.12.0<br>
+
+\* Fixed Ghost Hand Malfunction<br>
+\# Stuff?<br>
+
 ## 1.11.0<br>
 
 \* Fixed issue with DoorBreach<br>
