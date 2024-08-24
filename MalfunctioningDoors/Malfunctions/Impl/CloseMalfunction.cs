@@ -114,8 +114,7 @@ public class CloseMalfunction : MalfunctionalDoor {
         }
 
         StartCoroutine(DelayedTask(2, () => {
-            if (!doorLock.isDoorOpened)
-                return;
+            if (!doorLock.isDoorOpened) return;
 
             doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, open);
         }));
@@ -124,8 +123,7 @@ public class CloseMalfunction : MalfunctionalDoor {
     public override void UseKey() {
     }
 
-    public override bool ShouldExecute() =>
-        _syncedRandom.Next(0, 100) < _malfunctionChance && !IsDestroyed();
+    public override bool ShouldExecute() => _syncedRandom.Next(0, 100) < _malfunctionChance && !IsDestroyed();
 
     private static IEnumerator DelayedTask(float delay, Action action) {
         yield return new WaitForSeconds(delay);
@@ -139,8 +137,7 @@ internal class WaitingForDoorToBeClosed : MonoBehaviour {
     private static bool _done;
 
     private void Update() {
-        if (!_done)
-            return;
+        if (!_done) return;
 
         _done = false;
         Destroy(this);
@@ -149,8 +146,7 @@ internal class WaitingForDoorToBeClosed : MonoBehaviour {
     internal static IEnumerator WaitForDoorToBeClosed(DoorLock doorLock) {
         MalfunctioningDoors.Logger.LogInfo("Waiting for door to be closed :)");
 
-        while (doorLock.isDoorOpened)
-            yield return new WaitForSeconds(1);
+        while (doorLock.isDoorOpened) yield return new WaitForSeconds(1);
 
         yield return new WaitForEndOfFrame();
 

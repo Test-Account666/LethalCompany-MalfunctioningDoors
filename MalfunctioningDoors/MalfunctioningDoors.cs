@@ -43,10 +43,6 @@ public class MalfunctioningDoors : BaseUnityPlugin {
     private const int GHOST_HAND_SOUNDS_SIZE = 3;
     internal static Object ghostHandPrefab = null!;
 
-    internal static AudioClip? doorHitKnifeSfx;
-    internal static AudioClip? doorHitShovelSfx;
-    internal static AudioClip? doorBreakSfx;
-
     internal static readonly AudioClip[] GhostHandSfxList = new AudioClip[GHOST_HAND_SOUNDS_SIZE];
     public static MalfunctioningDoors Instance { get; private set; } = null!;
     internal new static ManualLogSource Logger { get; private set; } = null!;
@@ -158,8 +154,6 @@ public class MalfunctioningDoors : BaseUnityPlugin {
 
         LoadGhostHandAudioClips(audioPath);
 
-        LoadDoorAudioClips(audioPath);
-
         yield break;
     }
 
@@ -185,28 +179,6 @@ public class MalfunctioningDoors : BaseUnityPlugin {
 
             Logger.LogInfo($"Loaded clip '{ghostHandAudioClip.name}'!");
         }
-    }
-
-    private static void LoadDoorAudioClips(string audioPath) {
-        Logger.LogInfo("Loading Door Sounds...");
-
-        var doorAudioPath = Path.Combine(audioPath, "DoorSfx");
-
-        doorAudioPath = Directory.Exists(doorAudioPath)? doorAudioPath : Path.Combine(audioPath);
-
-
-        doorHitKnifeSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorHitKnife.wav")), "DoorHitKnife");
-
-        Logger.LogInfo(doorHitKnifeSfx is null? "Failed to load clip 'DoorHitKnife'!" : $"Loaded clip '{doorHitKnifeSfx.name}'!");
-
-        doorHitShovelSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorHitShovel.wav")), "DoorHitShovel");
-
-        Logger.LogInfo(doorHitShovelSfx is null? "Failed to load clip 'DoorHitShovel'!" : $"Loaded clip '{doorHitShovelSfx.name}'!");
-
-
-        doorBreakSfx = LoadAudioClipFromFile(new(Path.Combine(doorAudioPath, "DoorBreak.wav")), "DoorBreak");
-
-        Logger.LogInfo(doorBreakSfx is null? "Failed to load clip 'DoorBreak'!" : $"Loaded clip '{doorBreakSfx.name}'!");
     }
 
     private static AudioClip? LoadAudioClipFromFile(Uri filePath, string name) {

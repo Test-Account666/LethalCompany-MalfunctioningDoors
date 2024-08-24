@@ -27,7 +27,7 @@ using Random = System.Random;
 
 namespace MalfunctioningDoors.Malfunctions.Impl;
 
-[Malfunction(55)]
+[Malfunction(80)]
 public class NoYouMalfunction : MalfunctionalDoor {
     private static int _malfunctionChance = 35;
     private Random _syncedRandom = null!;
@@ -38,7 +38,7 @@ public class NoYouMalfunction : MalfunctionalDoor {
     }
 
     public static int OverrideWeight(ConfigFile configFile) =>
-        configFile.Bind("6. No You", "1. Malfunction Weight", 55,
+        configFile.Bind("6. No You", "1. Malfunction Weight", 80,
                         "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
 
     public new static void InitializeConfig(ConfigFile configFile) =>
@@ -69,7 +69,7 @@ public class NoYouMalfunction : MalfunctionalDoor {
         doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, !doorLock.isDoorOpened);
     }
 
-    private static IEnumerator StartRotation(PlayerControllerB playerControllerB, float direction) {
+/*    private static IEnumerator StartRotation(PlayerControllerB playerControllerB, float direction) {
         var terminate = 1F;
 
         var startRotation = playerControllerB.transform.rotation;
@@ -88,7 +88,49 @@ public class NoYouMalfunction : MalfunctionalDoor {
 
             yield return new WaitForEndOfFrame();
         }
+    }*/
+
+    private static IEnumerator StartRotation(PlayerControllerB playerControllerB, float direction) {
+        var terminate = 1f;
+        var startRotation = playerControllerB.transform.rotation;
+        var targetRotationY = startRotation.eulerAngles.y + 90 * direction; // Target rotation Y axis
+
+        // Define acceleration and deceleration rates
+        const float accelerationRate = 10f; // Adjust as needed
+        const float decelerationRate = 5f; // Adjust as needed
+
+        var currentAngle = startRotation.eulerAngles.y;
+        var rotationSpeed = 0f; // Initial speed set to 0
+
+        while (Quaternion.Angle(startRotation, playerControllerB.transform.rotation) < 90) {
+            terminate -= Time.deltaTime;
+
+            if (terminate <= 0) yield break;
+
+            switch (rotationSpeed) {
+                // Calculate new rotation speed based on acceleration and deceleration
+                case < accelerationRate:
+                    rotationSpeed += Time.deltaTime * accelerationRate;
+                    break;
+                case > decelerationRate:
+                    rotationSpeed -= Time.deltaTime * decelerationRate;
+                    break;
+            }
+
+            // Apply rotation speed to current angle
+            currentAngle += rotationSpeed * Time.deltaTime * 240f * direction;
+
+            // Clamp current angle to ensure it doesn't exceed the target
+            currentAngle = direction > 0
+                ? Mathf.Clamp(currentAngle, startRotation.eulerAngles.y, targetRotationY)
+                : Mathf.Clamp(currentAngle, targetRotationY, startRotation.eulerAngles.y);
+
+            playerControllerB.TeleportPlayer(playerControllerB.transform.position, true, Quaternion.Euler(0, currentAngle, 0).eulerAngles.y);
+
+            yield return new WaitForEndOfFrame();
+        }
     }
+
 
     public override void UseKey() {
     }
