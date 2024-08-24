@@ -17,14 +17,8 @@
 */
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using BepInEx.Configuration;
 using GameNetcodeStuff;
-using HarmonyLib;
 using DoorBreach.Functional;
 using MalfunctioningDoors.Functional;
 using MalfunctioningDoors.Patches;
@@ -33,12 +27,9 @@ using Random = System.Random;
 
 namespace MalfunctioningDoors.Malfunctions.Impl;
 
-[Malfunction(55)]
+[Malfunction(75)]
 public class GhostHandMalfunction : MalfunctionalDoor {
-    private static int _malfunctionChance = 35;
-    private static Vector3 _position;
-    private Action? _spawnExplosionExpression;
-    private MethodInfo? _spawnExplosionMethod;
+    private static int _malfunctionChance = 86;
     private Random _syncedRandom = null!;
 
     private void Start() {
@@ -47,11 +38,11 @@ public class GhostHandMalfunction : MalfunctionalDoor {
     }
 
     public static int OverrideWeight(ConfigFile configFile) =>
-        configFile.Bind("4. Ghost Hand Malfunction", "1. Malfunction Weight", 55,
+        configFile.Bind("4. Ghost Hand Malfunction", "1. Malfunction Weight", 75,
                         "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
 
     public new static void InitializeConfig(ConfigFile configFile) =>
-        _malfunctionChance = configFile.Bind("4. Ghost Hand Malfunction", "2. Malfunction Chance", 35,
+        _malfunctionChance = configFile.Bind("4. Ghost Hand Malfunction", "2. Malfunction Chance", 86,
                                              "Defines the chance, if a malfunction is executed").Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
@@ -74,35 +65,7 @@ public class GhostHandMalfunction : MalfunctionalDoor {
 
         playerControllerB.DamagePlayer(10, true, true, CauseOfDeath.Bludgeoning, 1, false, playerControllerB.velocityLastFrame);
 
-        if (_spawnExplosionExpression is not null) {
-            _spawnExplosionExpression();
-            return;
-        }
-
-        var fetched = false;
-
-        try {
-            fetched = FetchAndExecuteSpawnExplosion([
-                doorLock.transform.position, false, 0f, 0f,
-            ]);
-        } catch {
-            //Ignored
-        } finally {
-            if (!fetched) {
-                var doorLockTransform = doorLock.transform;
-                var doorPosition = doorLockTransform.position;
-
-                _position = doorPosition;
-
-                fetched = FetchAndExecuteSpawnExplosion([
-                    doorPosition, false, 0f, 0f, 50, 15.0f, MalfunctioningDoors.ghostHandPrefab,
-                ]);
-            }
-        }
-
-        if (fetched) return;
-
-        MalfunctioningDoors.Logger.LogFatal("Something went wrong trying to fetch spawnExplosion!");
+        Landmine.SpawnExplosion(doorLock.transform.position, killRange: 0F, damageRange: 0F, physicsForce: 15.0F);
     }
 
     private static void CreateGhostHand(Component playerControllerB) {
@@ -133,36 +96,7 @@ public class GhostHandMalfunction : MalfunctionalDoor {
     public override void UseKey() {
     }
 
-    public override bool ShouldExecute() =>
-        _syncedRandom.Next(0, 100) <= _malfunctionChance && !IsDestroyed();
-
-    private bool FetchAndExecuteSpawnExplosion(IReadOnlyCollection<object> parameters) {
-        // Get the method info
-        _spawnExplosionMethod ??= typeof(Landmine).GetMethod("SpawnExplosion", BindingFlags.Public | BindingFlags.Static);
-
-        // Return false, as we failed to identify the method
-        if (_spawnExplosionMethod is null) return false;
-
-        // Return false, as we failed to identify the method
-        if (_spawnExplosionMethod.GetParameters().Length != parameters.Count) return false;
-
-        // ReSharper disable once CoVariantArrayConversion
-        var parameterExpressions = parameters.Select(o => o is null
-                                                         ? (Expression) Expression.Call(AccessTools.Method(typeof(GhostHandMalfunction),
-                                                                                            nameof(CreateExplosionObject)))
-                                                         : Expression.Constant(o)).ToArray();
-
-        var callExpression = Expression.Call(_spawnExplosionMethod, parameterExpressions);
-
-        var lambdaExpression = Expression.Lambda<Action>(callExpression);
-
-        // Compile the lambda expression into a delegate
-        _spawnExplosionExpression = lambdaExpression.Compile();
-
-        // Invoke the delegate
-        _spawnExplosionExpression();
-        return true; // Return true, as we successfully identified the method
-    }
+    public override bool ShouldExecute() => _syncedRandom.Next(0, 100) <= _malfunctionChance && !IsDestroyed();
 
     private void PlayGhostHandSound() {
         var soundIndex = _syncedRandom.Next(0, MalfunctioningDoors.GhostHandSfxList.Length);
@@ -181,8 +115,4 @@ public class GhostHandMalfunction : MalfunctionalDoor {
 
         Destroy(audioObject, ghostHandAudio.length);
     }
-
-    public static GameObject CreateExplosionObject() =>
-        Instantiate(StartOfRound.Instance.explosionPrefab, _position, Quaternion.identity,
-                    RoundManager.Instance.mapPropsContainer.transform);
 }
