@@ -75,7 +75,7 @@ public abstract class MalfunctionalDoor : MonoBehaviour {
 
             if (_destroy) break;
 
-            if (doorLock is null) continue;
+            if (doorLock is null || !doorLock) continue;
 
             var chance = DoorLockPatch.syncedRandom.Next(0, 100);
 

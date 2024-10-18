@@ -60,7 +60,7 @@ public class EatKeyMalfunction : MalfunctionalDoor {
 
         yield return new WaitUntil(() => doorLock is not null);
 
-        if (doorLock is null) yield break;
+        if (doorLock is null || !doorLock) yield break;
 
         doorLock.LockDoor();
 

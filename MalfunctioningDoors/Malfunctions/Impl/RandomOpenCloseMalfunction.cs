@@ -44,7 +44,7 @@ public class RandomOpenCloseMalfunction : MalfunctionalDoor {
 
         StartCoroutine(StartWaiting());
 
-        if (doorLock is null) return;
+        if (doorLock is null || !doorLock) return;
 
         var chance = _syncedRandom.Next(0, 100);
 

@@ -62,7 +62,7 @@ public static class DoorLockPatch {
     }
 
     internal static void AddMalfunction(DoorLock? doorLock, Type malfunctionalDoorType) {
-        if (doorLock is null) return;
+        if (doorLock is null || !doorLock) return;
 
         if (!malfunctionalDoorType.IsSubclassOf(typeof(MalfunctionalDoor))) throw new ArgumentException($"Type '{malfunctionalDoorType.FullName}'");
 

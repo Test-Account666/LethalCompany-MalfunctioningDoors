@@ -62,7 +62,7 @@ public class CloseMalfunction : MalfunctionalDoor {
     }
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
-        if (doorLock is null) return;
+        if (doorLock is null || !doorLock) return;
 
         if (!doorLock.isDoorOpened) return;
 
@@ -95,7 +95,7 @@ public class CloseMalfunction : MalfunctionalDoor {
     }
 
     public override void UseInteract(PlayerControllerB playerControllerB) {
-        if (doorLock is null) return;
+        if (doorLock is null || !doorLock) return;
 
         var chance = _syncedRandom.Next(0, 100);
 

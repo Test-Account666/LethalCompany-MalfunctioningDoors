@@ -49,7 +49,7 @@ public class NoYouMalfunction : MalfunctionalDoor {
     }
 
     public override void UseInteract(PlayerControllerB playerControllerB) {
-        if (doorLock is null) return;
+        if (doorLock is null || !doorLock) return;
 
         var direction = 1;
 
@@ -68,27 +68,6 @@ public class NoYouMalfunction : MalfunctionalDoor {
 
         doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, !doorLock.isDoorOpened);
     }
-
-/*    private static IEnumerator StartRotation(PlayerControllerB playerControllerB, float direction) {
-        var terminate = 1F;
-
-        var startRotation = playerControllerB.transform.rotation;
-
-        var playerRotationY = startRotation.eulerAngles.y;
-
-        while (Quaternion.Angle(startRotation, playerControllerB.transform.rotation) < 90) {
-            terminate -= Time.deltaTime;
-
-            if (terminate <= 0) yield break;
-
-            playerControllerB.TeleportPlayer(playerControllerB.transform.position, true,
-                                             playerRotationY + Time.deltaTime * 240F * direction);
-
-            playerRotationY = playerControllerB.transform.rotation.eulerAngles.y;
-
-            yield return new WaitForEndOfFrame();
-        }
-    }*/
 
     private static IEnumerator StartRotation(PlayerControllerB playerControllerB, float direction) {
         var terminate = 1f;

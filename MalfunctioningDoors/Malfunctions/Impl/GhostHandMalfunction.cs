@@ -46,7 +46,7 @@ public class GhostHandMalfunction : MalfunctionalDoor {
                                              "Defines the chance, if a malfunction is executed").Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
-        if (doorLock is null) return;
+        if (doorLock is null || !doorLock) return;
 
         if (doorLock.isDoorOpened) return;
 
