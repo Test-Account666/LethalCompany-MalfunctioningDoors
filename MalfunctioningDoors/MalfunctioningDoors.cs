@@ -167,8 +167,7 @@ public class MalfunctioningDoors : BaseUnityPlugin {
         for (var index = 1; index <= GHOST_HAND_SOUNDS_SIZE; index++) {
             var sound = index - 1;
 
-            var ghostHandAudioClip =
-                LoadAudioClipFromFile(new(Path.Combine(ghostHandAudioPath, $"GhostHand{index}.wav")), $"GhostHand{index}");
+            var ghostHandAudioClip = LoadAudioClipFromFile(new(Path.Combine(ghostHandAudioPath, $"GhostHand{index}.wav")), $"GhostHand{index}");
 
             if (ghostHandAudioClip is null) {
                 Logger.LogInfo($"Failed to load clip 'GhostHand{index}'!");

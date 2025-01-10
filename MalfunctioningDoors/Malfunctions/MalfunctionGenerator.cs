@@ -46,8 +46,7 @@ public static class MalfunctionGenerator {
         return typeof(CloseMalfunction);
     }
 
-    private static IEnumerable<KeyValuePair<TKey, TValue>> FisherYatesShuffle<TKey, TValue>(
-        Dictionary<TKey, TValue> dictionary, Random random) {
+    private static IEnumerable<KeyValuePair<TKey, TValue>> FisherYatesShuffle<TKey, TValue>(Dictionary<TKey, TValue> dictionary, Random random) {
         var list = dictionary.ToList();
         var size = list.Count;
         while (size > 1) {

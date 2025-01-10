@@ -23,6 +23,7 @@ using GameNetcodeStuff;
 using DoorBreach.Functional;
 using MalfunctioningDoors.Patches;
 using UnityEngine;
+using static DoorBreach.DoorBreach;
 using Random = System.Random;
 
 namespace MalfunctioningDoors.Malfunctions.Impl;
@@ -38,12 +39,10 @@ public class NoYouMalfunction : MalfunctionalDoor {
     }
 
     public static int OverrideWeight(ConfigFile configFile) =>
-        configFile.Bind("6. No You", "1. Malfunction Weight", 80,
-                        "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
+        configFile.Bind("6. No You", "1. Malfunction Weight", 80, "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
 
     public new static void InitializeConfig(ConfigFile configFile) =>
-        _malfunctionChance = configFile.Bind("6. No You", "2. Malfunction Chance", 35,
-                                             "Defines the chance, if a malfunction is executed").Value;
+        _malfunctionChance = configFile.Bind("6. No You", "2. Malfunction Chance", 35, "Defines the chance, if a malfunction is executed").Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
     }
@@ -66,7 +65,7 @@ public class NoYouMalfunction : MalfunctionalDoor {
             return;
         }
 
-        doorLocker.SetDoorOpenServerRpc((int) playerControllerB.playerClientId, !doorLock.isDoorOpened);
+        DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int) playerControllerB.playerClientId, !doorLock.isDoorOpened);
     }
 
     private static IEnumerator StartRotation(PlayerControllerB playerControllerB, float direction) {
