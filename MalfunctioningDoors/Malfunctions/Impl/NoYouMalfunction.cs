@@ -31,12 +31,9 @@ namespace MalfunctioningDoors.Malfunctions.Impl;
 [Malfunction(80)]
 public class NoYouMalfunction : MalfunctionalDoor {
     private static int _malfunctionChance = 35;
-    private Random _syncedRandom = null!;
+    private static Random SyncedRandom => DoorLockPatch.SyncedRandom;
 
-    private void Start() {
-        doorLock = GetComponent<DoorLock>();
-        _syncedRandom = DoorLockPatch.syncedRandom;
-    }
+    private void Start() => doorLock = GetComponent<DoorLock>();
 
     public static int OverrideWeight(ConfigFile configFile) =>
         configFile.Bind("6. No You", "1. Malfunction Weight", 80, "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
@@ -52,7 +49,7 @@ public class NoYouMalfunction : MalfunctionalDoor {
 
         var direction = 1;
 
-        if (_syncedRandom.Next(0, 2) > 0) direction = -direction;
+        if (SyncedRandom.Next(0, 2) > 0) direction = -direction;
 
         StartCoroutine(StartRotation(playerControllerB, direction));
 
@@ -113,5 +110,5 @@ public class NoYouMalfunction : MalfunctionalDoor {
     public override void UseKey() {
     }
 
-    public override bool ShouldExecute() => _syncedRandom.Next(0, 100) <= _malfunctionChance && !IsDestroyed();
+    public override bool ShouldExecute() => SyncedRandom!.Next(0, 100) <= _malfunctionChance && !IsDestroyed();
 }

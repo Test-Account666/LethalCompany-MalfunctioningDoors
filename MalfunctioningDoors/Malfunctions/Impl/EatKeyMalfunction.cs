@@ -31,11 +31,10 @@ namespace MalfunctioningDoors.Malfunctions.Impl;
 [Malfunction(65)]
 public class EatKeyMalfunction : MalfunctionalDoor {
     private static int _malfunctionChance = 65;
-    private Random _syncedRandom = null!;
+    private static Random SyncedRandom => DoorLockPatch.SyncedRandom!;
 
     private void Start() {
         doorLock = GetComponent<DoorLock>();
-        _syncedRandom = DoorLockPatch.syncedRandom;
 
         StartCoroutine(LockDoorRoutine());
     }
@@ -74,5 +73,5 @@ public class EatKeyMalfunction : MalfunctionalDoor {
         DoorNetworkManager.LockDoorServerRpc(doorLock.NetworkObject);
     }
 
-    public override bool ShouldExecute() => _syncedRandom.Next(0, 100) < _malfunctionChance && !IsDestroyed();
+    public override bool ShouldExecute() => SyncedRandom!.Next(0, 100) < _malfunctionChance && !IsDestroyed();
 }

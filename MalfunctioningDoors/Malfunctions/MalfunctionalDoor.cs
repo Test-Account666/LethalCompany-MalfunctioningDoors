@@ -76,11 +76,11 @@ public abstract class MalfunctionalDoor : MonoBehaviour {
 
             if (doorLock is null || !doorLock) continue;
 
-            var chance = DoorLockPatch.syncedRandom.Next(0, 100);
+            var chance = DoorLockPatch.SyncedRandom.Next(0, 100);
 
             if (chance > _changeMalfunctionChance) continue;
 
-            var malfunctionalDoor = MalfunctionGenerator.GenerateMalfunctionalDoor(DoorLockPatch.syncedRandom);
+            var malfunctionalDoor = MalfunctionGenerator.GenerateMalfunctionalDoor(DoorLockPatch.SyncedRandom);
 
             DoorLockPatch.AddMalfunction(doorLock, malfunctionalDoor);
             Destroy(this);

@@ -31,13 +31,10 @@ namespace MalfunctioningDoors.Malfunctions.Impl;
 [Malfunction(150)]
 public class RandomOpenCloseMalfunction : MalfunctionalDoor {
     private static int _malfunctionChance = 40;
-    private Random _syncedRandom = null!;
+    private static Random SyncedRandom => DoorLockPatch.SyncedRandom;
     private bool _waiting;
 
-    private void Start() {
-        doorLock = GetComponent<DoorLock>();
-        _syncedRandom = DoorLockPatch.syncedRandom;
-    }
+    private void Start() => doorLock = GetComponent<DoorLock>();
 
     private void Update() {
         if (_waiting) return;
@@ -46,7 +43,7 @@ public class RandomOpenCloseMalfunction : MalfunctionalDoor {
 
         if (doorLock is null || !doorLock) return;
 
-        var chance = _syncedRandom.Next(0, 100);
+        var chance = SyncedRandom.Next(0, 100);
 
         if (chance >= _malfunctionChance) return;
 
@@ -84,7 +81,7 @@ public class RandomOpenCloseMalfunction : MalfunctionalDoor {
     private IEnumerator StartWaiting() {
         _waiting = true;
 
-        yield return new WaitForSeconds(_syncedRandom.Next(5, 30));
+        yield return new WaitForSeconds(SyncedRandom.Next(5, 30));
 
         _waiting = false;
     }

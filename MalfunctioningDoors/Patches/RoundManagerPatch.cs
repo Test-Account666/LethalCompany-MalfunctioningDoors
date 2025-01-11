@@ -25,5 +25,5 @@ namespace MalfunctioningDoors.Patches;
 public static class RoundManagerPatch {
     [HarmonyPatch("GenerateNewLevelClientRpc")]
     [HarmonyPrefix]
-    public static void BeforeGenerateNewLevelClientRpc(int randomSeed) => DoorLockPatch.syncedRandom = new(randomSeed);
+    public static void BeforeGenerateNewLevelClientRpc(int randomSeed) => DoorLockPatch.SyncedRandom = new(randomSeed);
 }

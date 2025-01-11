@@ -28,7 +28,15 @@ namespace MalfunctioningDoors.Patches;
 
 [HarmonyPatch(typeof(DoorLock))]
 public static class DoorLockPatch {
-    public static Random syncedRandom = new();
+    private static Random? _syncedRandom;
+
+    public static Random SyncedRandom {
+        get {
+            return _syncedRandom ??= new();
+        }
+        set => _syncedRandom = value;
+    }
+
     private static int _malfunctioningDoorChance = 30;
 
     public static void InitializeConfig(ConfigFile configFile) =>
@@ -41,8 +49,7 @@ public static class DoorLockPatch {
     public static void AfterAwake(DoorLock __instance) {
         var malfunctionalDoorType = typeof(DormantMalfunction);
 
-        if (syncedRandom.Next(0, 100) < _malfunctioningDoorChance)
-            malfunctionalDoorType = MalfunctionGenerator.GenerateMalfunctionalDoor(syncedRandom);
+        if (SyncedRandom.Next(0, 100) < _malfunctioningDoorChance) malfunctionalDoorType = MalfunctionGenerator.GenerateMalfunctionalDoor(SyncedRandom);
 
         AddMalfunction(__instance, malfunctionalDoorType);
     }

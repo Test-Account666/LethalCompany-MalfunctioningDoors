@@ -35,12 +35,9 @@ public class CloseMalfunction : MalfunctionalDoor {
     private static int _lockWhenCloseChance = 80;
     private static int _openCloseAfterTwoSecondsChance = 40;
     private static int _malfunctionChance = 20;
-    private Random _syncedRandom = null!;
+    private static Random SyncedRandom => DoorLockPatch.SyncedRandom;
 
-    private void Start() {
-        doorLock = GetComponent<DoorLock>();
-        _syncedRandom = DoorLockPatch.syncedRandom;
-    }
+    private void Start() => doorLock = GetComponent<DoorLock>();
 
     public static int OverrideWeight(ConfigFile configFile) =>
         configFile.Bind("2. Close Malfunction", "1. Malfunction Weight", 100, "Defines the weight of a malfunction. The higher, the more likely it is to appear")
@@ -66,11 +63,11 @@ public class CloseMalfunction : MalfunctionalDoor {
 
         if (doorLock.GetComponent<WaitingForDoorToBeClosed>() is not null) return;
 
-        var chance = _syncedRandom.Next(0, 100);
+        var chance = SyncedRandom.Next(0, 100);
 
         if (chance >= _lockChance) return;
 
-        var chance1 = _syncedRandom.Next(0, 100);
+        var chance1 = SyncedRandom.Next(0, 100);
 
         if (chance1 < _lockWhenCloseChance) {
             var waitingForDoorToBeClosed = doorLock.gameObject.AddComponent<WaitingForDoorToBeClosed>();
@@ -95,7 +92,7 @@ public class CloseMalfunction : MalfunctionalDoor {
     public override void UseInteract(PlayerControllerB playerControllerB) {
         if (doorLock is null || !doorLock) return;
 
-        var chance = _syncedRandom.Next(0, 100);
+        var chance = SyncedRandom.Next(0, 100);
 
         var doorLocker = doorLock.gameObject.GetComponent<DoorLocker>();
 
@@ -121,7 +118,7 @@ public class CloseMalfunction : MalfunctionalDoor {
     public override void UseKey() {
     }
 
-    public override bool ShouldExecute() => _syncedRandom.Next(0, 100) < _malfunctionChance && !IsDestroyed();
+    public override bool ShouldExecute() => SyncedRandom!.Next(0, 100) < _malfunctionChance && !IsDestroyed();
 
     private static IEnumerator DelayedTask(float delay, Action action) {
         yield return new WaitForSeconds(delay);

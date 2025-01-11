@@ -31,12 +31,9 @@ namespace MalfunctioningDoors.Malfunctions.Impl;
 [Malfunction(75)]
 public class GhostHandMalfunction : MalfunctionalDoor {
     private static int _malfunctionChance = 86;
-    private Random _syncedRandom = null!;
+    private static Random SyncedRandom => DoorLockPatch.SyncedRandom;
 
-    private void Start() {
-        doorLock = GetComponent<DoorLock>();
-        _syncedRandom = DoorLockPatch.syncedRandom;
-    }
+    private void Start() => doorLock = GetComponent<DoorLock>();
 
     public static int OverrideWeight(ConfigFile configFile) =>
         configFile.Bind("4. Ghost Hand Malfunction", "1. Malfunction Weight", 75,
@@ -96,10 +93,10 @@ public class GhostHandMalfunction : MalfunctionalDoor {
     public override void UseKey() {
     }
 
-    public override bool ShouldExecute() => _syncedRandom.Next(0, 100) <= _malfunctionChance && !IsDestroyed();
+    public override bool ShouldExecute() => SyncedRandom!.Next(0, 100) <= _malfunctionChance && !IsDestroyed();
 
     private void PlayGhostHandSound() {
-        var soundIndex = _syncedRandom.Next(0, MalfunctioningDoors.GhostHandSfxList.Length);
+        var soundIndex = SyncedRandom.Next(0, MalfunctioningDoors.GhostHandSfxList.Length);
 
         var ghostHandAudio = MalfunctioningDoors.GhostHandSfxList[soundIndex];
 
