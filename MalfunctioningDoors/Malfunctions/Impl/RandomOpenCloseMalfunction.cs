@@ -56,15 +56,17 @@ public class RandomOpenCloseMalfunction : MalfunctionalDoor {
 
         var open = !doorLock.isDoorOpened;
 
-        DoorBreach.DoorBreach.DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, ActionSource.Source.MALFUNCTION.ToInt(), open);
+        DoorBreach.DoorBreach.DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, ActionSource.Source.MALFUNCTION.ToInt(),
+            open);
     }
 
     public static int OverrideWeight(ConfigFile configFile) =>
         configFile.Bind("5. Random Open Close Malfunction", "1. Malfunction Weight", 150,
-                        "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
+            "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
 
     public new static void InitializeConfig(ConfigFile configFile) =>
-        _malfunctionChance = configFile.Bind("5. Random Open Close Malfunction", "2. Malfunction Chance", 40, "Defines the chance, if a malfunction is executed")
+        _malfunctionChance = configFile.Bind("5. Random Open Close Malfunction", "2. Malfunction Chance", 40,
+                                           "Defines the chance, if a malfunction is executed")
                                        .Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {

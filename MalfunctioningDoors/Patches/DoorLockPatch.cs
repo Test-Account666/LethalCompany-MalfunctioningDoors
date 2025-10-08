@@ -31,16 +31,15 @@ public static class DoorLockPatch {
     private static Random? _syncedRandom;
 
     public static Random SyncedRandom {
-        get {
-            return _syncedRandom ??= new();
-        }
+        get { return _syncedRandom ??= new(); }
         set => _syncedRandom = value;
     }
 
     private static int _malfunctioningDoorChance = 30;
 
     public static void InitializeConfig(ConfigFile configFile) =>
-        _malfunctioningDoorChance = configFile.Bind("1. General", "1. Malfunctional Door Chance", 30, "Defines the chance that a door can be malfunctional").Value;
+        _malfunctioningDoorChance = configFile.Bind("1. General", "1. Malfunctional Door Chance", 30,
+            "Defines the chance that a door can be malfunctional").Value;
 
     [HarmonyPatch(nameof(DoorLock.Awake))]
     [HarmonyPostfix]
@@ -49,7 +48,8 @@ public static class DoorLockPatch {
     public static void AfterAwake(DoorLock __instance) {
         var malfunctionalDoorType = typeof(DormantMalfunction);
 
-        if (SyncedRandom.Next(0, 100) < _malfunctioningDoorChance) malfunctionalDoorType = MalfunctionGenerator.GenerateMalfunctionalDoor(SyncedRandom);
+        if (SyncedRandom.Next(0, 100) < _malfunctioningDoorChance)
+            malfunctionalDoorType = MalfunctionGenerator.GenerateMalfunctionalDoor(SyncedRandom);
 
         AddMalfunction(__instance, malfunctionalDoorType);
     }
@@ -70,9 +70,10 @@ public static class DoorLockPatch {
     internal static void AddMalfunction(DoorLock? doorLock, Type malfunctionalDoorType) {
         if (doorLock is null || !doorLock) return;
 
-        if (!malfunctionalDoorType.IsSubclassOf(typeof(MalfunctionalDoor))) throw new ArgumentException($"Type '{malfunctionalDoorType.FullName}'");
+        if (!malfunctionalDoorType.IsSubclassOf(typeof(MalfunctionalDoor)))
+            throw new ArgumentException($"Type '{malfunctionalDoorType.FullName}'");
 
-        var malfunctionalDoor = (MalfunctionalDoor) doorLock.gameObject.AddComponent(malfunctionalDoorType);
+        var malfunctionalDoor = (MalfunctionalDoor)doorLock.gameObject.AddComponent(malfunctionalDoorType);
 
         doorLock.doorTrigger.onInteract.AddListener(playerControllerB => {
             if (playerControllerB is null) return;

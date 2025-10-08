@@ -40,11 +40,13 @@ public class EatKeyMalfunction : MalfunctionalDoor {
     }
 
     public static int OverrideWeight(ConfigFile configFile) =>
-        configFile.Bind("3. Eat Key Malfunction", "1. Malfunction Weight", 65, "Defines the weight of a malfunction. The higher, the more likely it is to appear")
+        configFile.Bind("3. Eat Key Malfunction", "1. Malfunction Weight", 65,
+                      "Defines the weight of a malfunction. The higher, the more likely it is to appear")
                   .Value;
 
     public new static void InitializeConfig(ConfigFile configFile) =>
-        _malfunctionChance = configFile.Bind("3. Eat Key Malfunction", "2. Malfunction Chance", 65, "Defines the chance, if a malfunction is executed").Value;
+        _malfunctionChance = configFile.Bind("3. Eat Key Malfunction", "2. Malfunction Chance", 65,
+            "Defines the chance, if a malfunction is executed").Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
     }

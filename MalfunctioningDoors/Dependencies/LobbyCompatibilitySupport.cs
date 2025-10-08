@@ -6,5 +6,5 @@ namespace MalfunctioningDoors.Dependencies;
 internal static class LobbyCompatibilitySupport {
     internal static void Initialize() =>
         PluginHelper.RegisterPlugin(MyPluginInfo.PLUGIN_GUID, new(MyPluginInfo.PLUGIN_VERSION), CompatibilityLevel.Everyone,
-                                    VersionStrictness.Minor);
+            VersionStrictness.Minor);
 }

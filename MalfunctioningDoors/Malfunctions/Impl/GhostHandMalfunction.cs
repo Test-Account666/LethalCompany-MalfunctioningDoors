@@ -37,10 +37,11 @@ public class GhostHandMalfunction : MalfunctionalDoor {
 
     public static int OverrideWeight(ConfigFile configFile) =>
         configFile.Bind("4. Ghost Hand Malfunction", "1. Malfunction Weight", 75,
-                        "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
+            "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
 
     public new static void InitializeConfig(ConfigFile configFile) =>
-        _malfunctionChance = configFile.Bind("4. Ghost Hand Malfunction", "2. Malfunction Chance", 86, "Defines the chance, if a malfunction is executed").Value;
+        _malfunctionChance = configFile.Bind("4. Ghost Hand Malfunction", "2. Malfunction Chance", 86,
+            "Defines the chance, if a malfunction is executed").Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
         if (doorLock is null || !doorLock) return;
@@ -54,7 +55,7 @@ public class GhostHandMalfunction : MalfunctionalDoor {
             return;
         }
 
-        DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int) playerControllerB.playerClientId, true);
+        DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int)playerControllerB.playerClientId, true);
 
         PlayGhostHandSound();
 

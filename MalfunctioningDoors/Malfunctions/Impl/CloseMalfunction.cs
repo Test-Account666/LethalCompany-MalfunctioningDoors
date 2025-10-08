@@ -40,20 +40,22 @@ public class CloseMalfunction : MalfunctionalDoor {
     private void Start() => doorLock = GetComponent<DoorLock>();
 
     public static int OverrideWeight(ConfigFile configFile) =>
-        configFile.Bind("2. Close Malfunction", "1. Malfunction Weight", 100, "Defines the weight of a malfunction. The higher, the more likely it is to appear")
+        configFile.Bind("2. Close Malfunction", "1. Malfunction Weight", 100,
+                      "Defines the weight of a malfunction. The higher, the more likely it is to appear")
                   .Value;
 
     public new static void InitializeConfig(ConfigFile configFile) {
-        _malfunctionChance = configFile.Bind("2. Close Malfunction", "2. Malfunction Chance", 20, "Defines the chance, if a malfunction is executed").Value;
+        _malfunctionChance = configFile.Bind("2. Close Malfunction", "2. Malfunction Chance", 20,
+            "Defines the chance, if a malfunction is executed").Value;
 
         _lockChance = configFile.Bind("2. Close Malfunction", "3. Lock Chance", 30, "Defines the chance, if a door will be locked").Value;
 
         _lockWhenCloseChance = configFile.Bind("2. Close Malfunction", "4. Lock When Close Chance", 80,
-                                               "Defines the chance, if a door will be locked after closing (The 'Lock Chance' will be rolled first)").Value;
+            "Defines the chance, if a door will be locked after closing (The 'Lock Chance' will be rolled first)").Value;
 
         _openCloseAfterTwoSecondsChance = configFile.Bind("2. Close Malfunction", "5. Open Close After Two Seconds Chance", 40,
-                                                          "Defines the chance, if a door will open/close after two seconds after being opened/closed"
-                                                        + " ('Malfunction Chance' will be rolled first)").Value;
+            "Defines the chance, if a door will open/close after two seconds after being opened/closed"
+            + " ('Malfunction Chance' will be rolled first)").Value;
     }
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
@@ -104,14 +106,14 @@ public class CloseMalfunction : MalfunctionalDoor {
         var open = !doorLock.isDoorOpened;
 
         if (chance >= _openCloseAfterTwoSecondsChance) {
-            DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int) playerControllerB.playerClientId, open);
+            DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int)playerControllerB.playerClientId, open);
             return;
         }
 
         StartCoroutine(DelayedTask(2, () => {
             if (!doorLock.isDoorOpened) return;
 
-            DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int) playerControllerB.playerClientId, open);
+            DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int)playerControllerB.playerClientId, open);
         }));
     }
 

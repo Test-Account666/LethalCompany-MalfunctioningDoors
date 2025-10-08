@@ -61,7 +61,9 @@ public abstract class MalfunctionalDoor : MonoBehaviour {
     public abstract void UseInteract(PlayerControllerB playerControllerB);
 
     public static void InitializeConfig(ConfigFile configFile) =>
-        _changeMalfunctionChance = configFile.Bind("1. General", "2. Malfunction Change Chance", 30, "Defines the chance, if a malfunction is changed").Value;
+        _changeMalfunctionChance = configFile
+                                   .Bind("1. General", "2. Malfunction Change Chance", 30,
+                                       "Defines the chance, if a malfunction is changed").Value;
 
     public abstract void UseKey();
 

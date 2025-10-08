@@ -36,10 +36,12 @@ public class NoYouMalfunction : MalfunctionalDoor {
     private void Start() => doorLock = GetComponent<DoorLock>();
 
     public static int OverrideWeight(ConfigFile configFile) =>
-        configFile.Bind("6. No You", "1. Malfunction Weight", 80, "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
+        configFile.Bind("6. No You", "1. Malfunction Weight", 80,
+            "Defines the weight of a malfunction. The higher, the more likely it is to appear").Value;
 
     public new static void InitializeConfig(ConfigFile configFile) =>
-        _malfunctionChance = configFile.Bind("6. No You", "2. Malfunction Chance", 35, "Defines the chance, if a malfunction is executed").Value;
+        _malfunctionChance = configFile.Bind("6. No You", "2. Malfunction Chance", 35, "Defines the chance, if a malfunction is executed")
+                                       .Value;
 
     public override void TouchInteract(PlayerControllerB playerControllerB) {
     }
@@ -62,7 +64,7 @@ public class NoYouMalfunction : MalfunctionalDoor {
             return;
         }
 
-        DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int) playerControllerB.playerClientId, !doorLock.isDoorOpened);
+        DoorNetworkManager.SetDoorOpenServerRpc(doorLock.NetworkObject, (int)playerControllerB.playerClientId, !doorLock.isDoorOpened);
     }
 
     private static IEnumerator StartRotation(PlayerControllerB playerControllerB, float direction) {
@@ -100,7 +102,8 @@ public class NoYouMalfunction : MalfunctionalDoor {
                 ? Mathf.Clamp(currentAngle, startRotation.eulerAngles.y, targetRotationY)
                 : Mathf.Clamp(currentAngle, targetRotationY, startRotation.eulerAngles.y);
 
-            playerControllerB.TeleportPlayer(playerControllerB.transform.position, true, Quaternion.Euler(0, currentAngle, 0).eulerAngles.y);
+            playerControllerB.TeleportPlayer(playerControllerB.transform.position, true,
+                Quaternion.Euler(0, currentAngle, 0).eulerAngles.y);
 
             yield return new WaitForEndOfFrame();
         }

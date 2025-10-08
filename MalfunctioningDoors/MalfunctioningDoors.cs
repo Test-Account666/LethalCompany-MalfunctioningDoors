@@ -119,14 +119,14 @@ public class MalfunctioningDoors : BaseUnityPlugin {
         var markedTypes = types.Where(Predicate);
 
         foreach (var type in markedTypes) {
-            var malfunction = (MalfunctionAttribute) type.GetCustomAttribute(typeof(MalfunctionAttribute), false);
+            var malfunction = (MalfunctionAttribute)type.GetCustomAttribute(typeof(MalfunctionAttribute), false);
 
             var weight = malfunction.weight;
 
             var overrideWeightMethod = type.GetMethod("OverrideWeight", BindingFlags.Public | BindingFlags.Static);
 
             if (overrideWeightMethod is not null)
-                weight = (int) overrideWeightMethod.Invoke(null, [
+                weight = (int)overrideWeightMethod.Invoke(null, [
                     Instance.Config,
                 ]);
 
@@ -140,7 +140,8 @@ public class MalfunctioningDoors : BaseUnityPlugin {
         }
     }
 
-    private static bool Predicate(ICustomAttributeProvider type) => type.GetCustomAttributes(typeof(MalfunctionAttribute), false).Length > 0;
+    private static bool Predicate(ICustomAttributeProvider type) =>
+        type.GetCustomAttributes(typeof(MalfunctionAttribute), false).Length > 0;
 
     private static IEnumerator LoadAudioClips() {
         var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -167,7 +168,8 @@ public class MalfunctioningDoors : BaseUnityPlugin {
         for (var index = 1; index <= GHOST_HAND_SOUNDS_SIZE; index++) {
             var sound = index - 1;
 
-            var ghostHandAudioClip = LoadAudioClipFromFile(new(Path.Combine(ghostHandAudioPath, $"GhostHand{index}.wav")), $"GhostHand{index}");
+            var ghostHandAudioClip =
+                LoadAudioClipFromFile(new(Path.Combine(ghostHandAudioPath, $"GhostHand{index}.wav")), $"GhostHand{index}");
 
             if (ghostHandAudioClip is null) {
                 Logger.LogInfo($"Failed to load clip 'GhostHand{index}'!");
