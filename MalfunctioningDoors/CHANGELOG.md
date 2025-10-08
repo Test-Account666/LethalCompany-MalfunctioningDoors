@@ -1,5 +1,9 @@
 # Malfunctioning Doors Mod
 
+## 1.14.0<br>
+
+\* Fixed v73 compatibility<br>
+
 ## 1.13.1<br>
 
 \* Fixed Random ever becoming null<br>

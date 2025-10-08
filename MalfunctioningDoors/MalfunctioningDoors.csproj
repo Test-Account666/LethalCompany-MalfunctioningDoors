@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    <Sdk Name="Evaisa.NetcodePatcher.MSBuild" Version="4.4.1"/>
 
     <!-- BepInEx Properties -->
     <PropertyGroup>
         <AssemblyName>TestAccount666.MalfunctioningDoors</AssemblyName>
         <Product>MalfunctioningDoors</Product>
         <!-- Change to whatever version you're currently on. -->
-        <Version>1.13.1</Version>
+        <Version>1.14.0</Version>
         <Description>Who needs working doors anyway?</Description>
         <Source>https://github.com/Test-Account666/LethalCompany-MalfunctioningDoors/</Source>
     </PropertyGroup>
@@ -45,29 +46,31 @@
     <!-- Primary Package References -->
     <ItemGroup>
         <PackageReference Include="BepInEx.Analyzers" Version="1.0.8">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" PrivateAssets="all" />
-        <PackageReference Include="LethalCompany.GameLibs.Steam" Version="56.0.1-ngd.0" />
-        <PackageReference Include="TeamBMX.LobbyCompatibility" Version="1.1.0" />
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21"/>
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" PrivateAssets="all"/>
+        <PackageReference Include="LethalCompany.GameLibs.Steam" Version="73.0.0-ngd.0"/>
+        <PackageReference Include="TeamBMX.LobbyCompatibility" Version="1.1.0"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.62" IncludeAssets="compile" PrivateAssets="all"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Evaisa.NetcodePatcher.MSBuild" Version="3.3.4" PrivateAssets="all" />
-    </ItemGroup>
+    <PropertyGroup>
+        <NetcodePatcherUnityVersion>2022.3.62</NetcodePatcherUnityVersion>
+        <NetcodePatcherNetcodeVersion>1.12.0</NetcodePatcherNetcodeVersion>
+        <NetcodePatcherTransportVersion>1.0.0</NetcodePatcherTransportVersion>
+    </PropertyGroup>
     <ItemGroup>
         <NetcodePatch Include="$(TargetPath)"/>
     </ItemGroup>
     <ItemGroup>
-      <Reference Include="TestAccount666.DoorBreach">
-        <HintPath>..\include\DoorBreach.dll</HintPath>
-      </Reference>
+        <Reference Include="TestAccount666.DoorBreach">
+            <HintPath>..\include\DoorBreach.dll</HintPath>
+        </Reference>
     </ItemGroup>
 </Project>
